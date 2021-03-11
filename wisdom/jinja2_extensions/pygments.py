@@ -1,4 +1,3 @@
-from os.path import split
 from .base import discover_extension
 from .base import generate_extension
 
