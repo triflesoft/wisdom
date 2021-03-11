@@ -1,3 +1,4 @@
+from os.path import split
 from .base import discover_extension
 from .base import generate_extension
 
@@ -23,8 +24,9 @@ class PygmentsGenerateExtension(generate_extension('PygmentsGenerateExtensionBas
             code_lexer = get_lexer_by_name(code_lexer, stripall=True, ensurenl=True)
 
         code_style = get_style_by_name(code_style)
+        code_formatter = HtmlFormatter(style=code_style, nowrap=True, noclasses=True)
+        code_html = highlight(code_text, code_lexer, code_formatter)
+        code_html_lines = code_html.splitlines()
+        code_html = '</li><li>'.join(code_html_lines)
 
-        formatter = HtmlFormatter(nowrap=True, style=code_style, noclasses=True)
-        code_html = highlight(code_text, code_lexer, formatter)
-
-        return f'<code class="pygments"><pre>{code_html}</pre></code>'
+        return f'''<code class="pygments"><button class="copy"></button><pre><ol><li>{code_html}</li></ol></pre></code>'''
