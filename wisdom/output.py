@@ -9,6 +9,7 @@ from os.path import join
 from shutil import copy
 
 from wisdom.jinja2_extensions import JINJA2_GENERATE_EXTENSIONS
+from wisdom.jinja2_filters import JINJA2_GENERATE_FILTERS
 
 
 class Output:
@@ -41,6 +42,7 @@ class Output:
                                     autoescape=True,
                                     loader=jinja2_loader,
                                     auto_reload=False)
+                                jinja2_environment.filters.update(JINJA2_GENERATE_FILTERS)
                                 jinja2_environments[design_name] = jinja2_environment
 
                             jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))

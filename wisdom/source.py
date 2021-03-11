@@ -16,6 +16,7 @@ from sys import exit
 from yaml import safe_load
 
 from wisdom.jinja2_extensions import JINJA2_DISCOVER_EXTENSIONS
+from wisdom.jinja2_filters import JINJA2_DISCOVER_FILTERS
 
 
 class Template:
@@ -400,6 +401,7 @@ class SourceDiscovery:
                                     autoescape=True,
                                     loader=jinja2_loader,
                                     auto_reload=False)
+                                jinja2_environment.filters.update(JINJA2_DISCOVER_FILTERS)
                                 jinja2_environments[design_name] = jinja2_environment
 
                             jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))

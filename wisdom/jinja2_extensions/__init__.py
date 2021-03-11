@@ -23,3 +23,7 @@ JINJA2_GENERATE_EXTENSIONS = (
     PlantUmlGenerateExtension,
     PygmentsGenerateExtension)
 
+__all__ = (
+    'JINJA2_DISCOVER_EXTENSIONS',
+    'JINJA2_GENERATE_EXTENSIONS',
+)
