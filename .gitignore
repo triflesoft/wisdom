@@ -1,0 +1,7 @@
+__pycache__/
+.vscode/
+*.code-workspace
+*.py[cod]
+design/
+output/
+source/
