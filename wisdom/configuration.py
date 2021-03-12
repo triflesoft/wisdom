@@ -59,10 +59,12 @@ class Component:
             exit(1)
 
         if 'version' not in self.template_path_pattern.groupindex:
-            info('Optional group "version" is missing from template_path_pattern in component "%s".', code)
+            error('Mandatory group "version" is missing from template_path_pattern in component "%s".', code)
+            exit(1)
 
         if 'culture' not in self.template_path_pattern.groupindex:
-            info('Optional group "culture" is missing from template_path_pattern in component "%s".', code)
+            error('Mandatory group "culture" is missing from template_path_pattern in component "%s".', code)
+            exit(1)
 
         if 'output_path' not in self.document_path_pattern.groupindex:
             error('Mandatory group "output_path" is missing from document_path_pattern in component "%s".', code)
