@@ -1,3 +1,4 @@
+from collections import defaultdict
 from jinja2 import FileSystemLoader
 from jinja2 import PrefixLoader
 from jinja2.sandbox import SandboxedEnvironment
@@ -20,6 +21,15 @@ class Output:
 
     def generate_jinja2(self):
         jinja2_environments = {}
+
+        hierarchy = defaultdict(lambda : defaultdict(list))
+
+        for template_component, version_templates in self.source.templates.items():
+            for template_version, culture_templates in version_templates.items():
+                for template_culture, family_templates in culture_templates.items():
+                    for template in family_templates:
+                        if template.parent is None:
+                            hierarchy[template_version][template_culture].append(template)
 
         for template_component, version_templates in self.source.templates.items():
             for template_version, culture_templates in version_templates.items():
@@ -51,8 +61,8 @@ class Output:
                                 'component': template_component,
                                 'version': template_version,
                                 'culture': template_culture,
-                                'templates': family_templates,
-                                'template': template,
+                                'hierarchy': hierarchy[template_version][template_culture],
+                                'this': template,
                             })
                             makedirs(dirname(template.output_path), exist_ok=True)
 
