@@ -32,7 +32,6 @@ class Template:
         self.culture = culture
         self.design_name = design_name
         self.variables = variables
-        self.code = f'{component.code}|{family}'
         self.version_mutations = []
         self.culture_mutations = []
         self.parent = None
@@ -47,18 +46,15 @@ class Template:
         return f'Template(component="{self.component.code}", loader_path="{self.loader_path}", version="{self.version.name if self.version else "*"}", culture="{self.culture.name if self.culture else "*"}")'
 
 
-class Document:
-    def __init__(self, source_path, output_path, loader_path, timestamp_ns, is_changed, component):
-        self.source_path = source_path
-        self.output_path = output_path
-        self.loader_path = loader_path
-        self.timestamp_ns = timestamp_ns
-        self.is_changed = is_changed
-        self.component = component
+class TemplateToc:
+    def __init__(self, name, attr_id, title):
+        self.name = name
+        self.attr_id = attr_id
+        self.title = title
+        self.children = []
 
     def __repr__(self):
-        return f'Document(component="{self.component.code}", loader_path="{self.loader_path}")'
-
+        return f'TemplateToc(name="{self.name}", attr_id="{self.attr_id}", title="{self.title}")'
 
 
 class TemplateTocDiscoveryParser(HTMLParser):
@@ -70,58 +66,100 @@ class TemplateTocDiscoveryParser(HTMLParser):
         'h5': 5,
         'h6': 6,
     }
+
     def __init__(self, source_path):
         super().__init__()
         self.source_path = source_path
         self.tag_stats = defaultdict(int)
         self.active_tag_name = None
-        self.active_tag_text = None
-        self.active_tag_attrs = None
+        self.active_tag_title = None
+        self.active_tag_attr_id = None
+        self.last_tag_level = 0
+        self.attr_ids = set()
         self.toc = []
+        self.ancestors = []
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, name, attrs):
         if self.active_tag_name:
             error(
                 'Template "%s" TOC is inconsistent, tag <%s> cannot have children, but tag <%s> was found inside it.',
                 self.source_path,
                 self.active_tag_name,
-                tag)
+                name)
             exit(1)
         else:
-            if tag in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6'):
-                self.active_tag_name = tag
-                self.active_tag_attrs = dict(attrs)
-                attr_id = self.active_tag_attrs.get('id', '')
+            if name in self.TAG_LEVELS:
+                self.active_tag_name = name
+                self.active_tag_attr_id = dict(attrs).get('id', '')
+
+                if not self.active_tag_attr_id:
+                    error(
+                        'Template "%s" TOC is inconsistent, tag <%s> has not id attribute specified.',
+                        self.source_path,
+                        self.active_tag_name)
+                    exit(1)
+
+                if self.active_tag_attr_id in self.attr_ids:
+                    error(
+                        'Template "%s" TOC is inconsistent, tag <%s id="%d"> has non-unique id attribute specified.',
+                        self.source_path,
+                        self.active_tag_name,
+                        self.active_tag_attr_id)
+                    exit(1)
 
                 if len(self.toc) > 0:
-                    if self.TAG_LEVELS[tag] - self.toc[-1][0] > 1:
+                    if self.TAG_LEVELS[self.active_tag_name] - self.last_tag_level > 1:
                         error(
                             'Template "%s" TOC is inconsistent, tag <%s id="%s"> follows tag <%s id="%s">.',
                             self.source_path,
-                            tag,
-                            attr_id,
-                            self.toc[-1][0],
-                            self.toc[-1][1])
+                            self.active_tag_name,
+                            self.active_tag_attr_id,
+                            self.toc[-1].name,
+                            self.toc[-1].attr_id)
                         exit(1)
 
-    def handle_endtag(self, tag):
+                self.last_tag_level = self.TAG_LEVELS[self.active_tag_name]
+
+    def handle_endtag(self, name):
         if self.active_tag_name:
-            if tag != self.active_tag_name:
+            if name != self.active_tag_name:
                 error(
                     'Template "%s" TOC is inconsistent, tag </%s> was closed, but <%s> was previously open.',
                     self.source_path,
-                    tag,
+                    name,
                     self.active_tag_name)
                 exit(1)
             else:
-                self.toc.append((self.TAG_LEVELS[self.active_tag_name], self.active_tag_attrs, self.active_tag_text))
+                while (len(self.ancestors) > 0) and (self.TAG_LEVELS[self.ancestors[-1].name] >= self.TAG_LEVELS[self.active_tag_name]):
+                    self.ancestors.pop()
+
+                if len(self.ancestors) == 0:
+                    self.toc.append(TemplateToc(self.active_tag_name, self.active_tag_attr_id, self.active_tag_title))
+                    self.ancestors.append(self.toc[-1])
+                else:
+                    self.ancestors[-1].children.append(TemplateToc(self.active_tag_name, self.active_tag_attr_id, self.active_tag_title))
+                    self.ancestors.append(self.ancestors[-1].children[-1])
+
                 self.tag_stats[self.active_tag_name] += 1
                 self.active_tag_name = None
-                self.active_tag_attrs = None
-                self.active_tag_text = None
+                self.active_tag_attr_id = None
+                self.active_tag_title = None
 
     def handle_data(self, data):
-        self.active_tag_text = data
+        self.active_tag_title = data
+
+
+class Document:
+    def __init__(self, source_path, output_path, loader_path, timestamp_ns, is_changed, component):
+        self.source_path = source_path
+        self.output_path = output_path
+        self.loader_path = loader_path
+        self.timestamp_ns = timestamp_ns
+        self.is_changed = is_changed
+        self.component = component
+
+    def __repr__(self):
+        return f'Document(component="{self.component.code}", loader_path="{self.loader_path}")'
 
 
 class SourceDiscovery:
@@ -188,8 +226,8 @@ class SourceDiscovery:
             source_path, loader_path, source_stat, component, match_dict = template_file_paths.pop()
             output_path = join(self.arguments.output_path, match_dict['output_path'])
             name = match_dict['name']
-            version = match_dict.get('version', None)
-            culture = match_dict.get('culture', None)
+            version = match_dict['version']
+            culture = match_dict['culture']
             source_timestamp_ns = max(source_stat.st_ctime_ns, source_stat.st_mtime_ns)
             variables = {'title': basename(name).title()}
             version_custom_mutations = {}
@@ -405,17 +443,17 @@ class SourceDiscovery:
                                 jinja2_environments[design_name] = jinja2_environment
 
                             jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))
-                            output_html = jinja2_template.render({'template': template})
+                            output_html = jinja2_template.render({'this': template})
                             toc_parser = TemplateTocDiscoveryParser(template.source_path)
                             toc_parser.feed(output_html)
 
                             if toc_parser.tag_stats['h1'] == 0:
                                 warning(
-                                    'Template "%s" TOC is inconsistent, no <h1> was found.',
+                                    'Template "%s" TOC is inconsistent, no <h1> tag was found.',
                                     template.source_path)
                             elif toc_parser.tag_stats['h1'] >= 2:
                                 warning(
-                                    'Template "%s" TOC is inconsistent, too many <h1> was found.',
+                                    'Template "%s" TOC is inconsistent, too many <h1> tags was found.',
                                     template.source_path)
 
                             template.toc = toc_parser.toc
@@ -425,7 +463,7 @@ class Source:
     def __init__(self, arguments, configuration):
         self.arguments = arguments
         self.configuration = configuration
-        self.templates = defaultdict(lambda : defaultdict(dict))
+        self.templates = defaultdict(lambda : defaultdict(lambda : defaultdict(list)))
         self.documents = {}
 
     def discover(self):
@@ -443,7 +481,11 @@ class Source:
                 for template_culture, family_templates in culture_templates.items():
                     templates = sorted(family_templates.values(), key=lambda t: t.loader_path)
 
-                    self.templates[template_component][template_version][template_culture] = templates
+                    if template_version is None:
+                        for version in self.configuration.versions.values():
+                            self.templates[template_component][version][template_culture] += templates
+                    else:
+                        self.templates[template_component][template_version][template_culture] += templates
 
         for document_component, name_documents in source_discovery.documents.items():
             documents = sorted(name_documents.values(), key=lambda d: d.loader_path)
