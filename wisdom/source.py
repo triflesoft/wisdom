@@ -13,16 +13,36 @@ from os.path import join
 from re import compile
 from re import DOTALL
 from sys import exit
+from typing import Optional
 from yaml import safe_load
 
+from wisdom.arguments import Arguments
+from wisdom.configuration import Component
+from wisdom.configuration import Configuration
+from wisdom.configuration import Version
+from wisdom.configuration import Culture
 from wisdom.jinja2_extensions import JINJA2_DISCOVER_EXTENSIONS
 from wisdom.jinja2_filters import JINJA2_DISCOVER_FILTERS
 
 
 class Template:
-    def __init__(self, source_path, output_path, loader_path, timestamp_ns, is_changed, component, family, version, culture, design_name, variables):
+    def __init__(
+            self,
+            source_path: str,
+            output_path: str,
+            output_link: str,
+            loader_path: str,
+            timestamp_ns: int,
+            is_changed: bool,
+            component: Component,
+            family: str,
+            version: Optional[Version],
+            culture: Optional[Culture],
+            design_name: str,
+            variables: dict):
         self.source_path = source_path
         self.output_path = output_path
+        self.output_link = output_link
         self.loader_path = loader_path
         self.timestamp_ns = timestamp_ns
         self.is_changed = is_changed
@@ -47,7 +67,7 @@ class Template:
 
 
 class TemplateToc:
-    def __init__(self, name, attr_id, title):
+    def __init__(self, name: str, attr_id: str, title: str):
         self.name = name
         self.attr_id = attr_id
         self.title = title
@@ -67,7 +87,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
         'h6': 6,
     }
 
-    def __init__(self, source_path):
+    def __init__(self, source_path: str):
         super().__init__()
         self.source_path = source_path
         self.tag_stats = defaultdict(int)
@@ -79,7 +99,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
         self.toc = []
         self.ancestors = []
 
-    def handle_starttag(self, name, attrs):
+    def handle_starttag(self, name: str, attrs: list):
         if self.active_tag_name:
             error(
                 'Template "%s" TOC is inconsistent, tag <%s> cannot have children, but tag <%s> was found inside it.',
@@ -120,7 +140,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
 
                 self.last_tag_level = self.TAG_LEVELS[self.active_tag_name]
 
-    def handle_endtag(self, name):
+    def handle_endtag(self, name: str):
         if self.active_tag_name:
             if name != self.active_tag_name:
                 error(
@@ -145,12 +165,19 @@ class TemplateTocDiscoveryParser(HTMLParser):
                 self.active_tag_attr_id = None
                 self.active_tag_title = None
 
-    def handle_data(self, data):
+    def handle_data(self, data: str):
         self.active_tag_title = data
 
 
 class Document:
-    def __init__(self, source_path, output_path, loader_path, timestamp_ns, is_changed, component):
+    def __init__(
+            self,
+            source_path: str,
+            output_path: str,
+            loader_path: str,
+            timestamp_ns: int,
+            is_changed: bool,
+            component: Component):
         self.source_path = source_path
         self.output_path = output_path
         self.loader_path = loader_path
@@ -225,6 +252,7 @@ class SourceDiscovery:
         while template_file_paths:
             source_path, loader_path, source_stat, component, match_dict = template_file_paths.pop()
             output_path = join(self.arguments.output_path, match_dict['output_path'])
+            output_link = match_dict['output_path'].lstrip('/')
             name = match_dict['name']
             version = match_dict['version']
             culture = match_dict['culture']
@@ -264,6 +292,7 @@ class SourceDiscovery:
             template = Template(
                 source_path,
                 output_path,
+                output_link,
                 loader_path,
                 source_timestamp_ns,
                 is_changed,
@@ -310,8 +339,6 @@ class SourceDiscovery:
                 component)
 
             self.documents[document.component][document.loader_path] = document
-
-        print(1)
 
     def apply_custom_version_mutations(self):
         for template_component, version_templates in self.templates.items():
@@ -460,7 +487,7 @@ class SourceDiscovery:
 
 
 class Source:
-    def __init__(self, arguments, configuration):
+    def __init__(self, arguments: Arguments, configuration: Configuration):
         self.arguments = arguments
         self.configuration = configuration
         self.templates = defaultdict(lambda : defaultdict(lambda : defaultdict(list)))
