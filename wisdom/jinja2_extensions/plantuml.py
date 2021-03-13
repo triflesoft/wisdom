@@ -1,4 +1,5 @@
 from hashlib import sha512
+from logging import info
 from logging import error
 from os import makedirs
 from os.path import dirname
@@ -28,6 +29,7 @@ class PlantUmlGenerateExtension(generate_extension('PlantUmlGenerateExtensionBas
 
         if not isfile(local_path):
             makedirs(dirname(local_path), exist_ok=True)
+            info('java -var "%s" -pipe -failfast2 -T%s', plantuml_executable, format)
             result = run(
                 ['java', '-jar', plantuml_executable, '-pipe', '-failfast2', f'-t{format}'],
                 input=diagram_markup_data,

@@ -1,4 +1,5 @@
 from hashlib import sha512
+from logging import info
 from logging import error
 from os import makedirs
 from os.path import dirname
@@ -28,6 +29,7 @@ class GraphvizGenerateExtension(generate_extension('GraphvizGenerateExtensionBas
 
         if not isfile(local_path):
             makedirs(dirname(local_path), exist_ok=True)
+            info('"%s" -T%s', graphviz_executable, format)
             result = run(
                 [graphviz_executable, f'-T{format}'],
                 input=diagram_markup_data,

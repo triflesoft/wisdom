@@ -2,12 +2,13 @@ from collections import defaultdict
 from jinja2 import FileSystemLoader
 from jinja2 import PrefixLoader
 from jinja2.sandbox import SandboxedEnvironment
+from logging import info
+from logging import error
 from os import makedirs
-from os import scandir
-from os import stat
 from os.path import dirname
 from os.path import join
 from shutil import copy
+from subprocess import run
 
 from wisdom.jinja2_extensions import JINJA2_GENERATE_EXTENSIONS
 from wisdom.jinja2_filters import JINJA2_GENERATE_FILTERS
@@ -70,55 +71,28 @@ class Output:
                                 output_file.write(output_html)
 
     def generate_static(self):
-        directory_dict = {}
-
-        for template_component, version_templates in self.source.templates.items():
-            for template_version, culture_templates in version_templates.items():
-                for template_culture, family_templates in culture_templates.items():
-                    for template in family_templates:
-                        design_name = template.design_name
-
-                        if design_name not in directory_dict:
-                            directory_dict[design_name] = join(self.arguments.design_path, design_name, 'generate/documents')
-
         static_paths = {}
-        directory_queue = []
-
-        for static_path in directory_dict.values():
-            directory_queue.append((len(static_path) + 1, static_path))
-
-        while directory_queue:
-            root_prefix_length, root_path = directory_queue.pop()
-
-            for directory_entry in scandir(root_path):
-                if directory_entry.is_dir(follow_symlinks=False):
-                    directory_queue.append((root_prefix_length, directory_entry.path))
-                elif directory_entry.is_file(follow_symlinks=False):
-                    source_path = directory_entry.path
-                    output_path = join(self.arguments.output_path, directory_entry.path[root_prefix_length:])
-                    static_paths[output_path] = source_path
 
         for document_component, name_documents in self.source.documents.items():
             for document in name_documents:
                 if (not self.arguments.changed_only) or document.is_changed:
-                    static_paths[document.output_path] = document.source_path
+                    static_paths[document.output_path] = document
 
-        for output_path, source_path in static_paths.items():
-            is_changed = True
+        for output_path, document in static_paths.items():
+            makedirs(dirname(output_path), exist_ok=True)
 
-            try:
-                output_stat = stat(output_path)
-                source_stat = stat(source_path)
-                output_time_ns = max(output_stat.st_ctime_ns, output_stat.st_mtime_ns)
-                source_stat_ns = max(source_stat.st_ctime_ns, source_stat.st_mtime_ns)
+            if document.preprocessor in ('sass', 'scss'):
+                info('sass "%s" "%s"', document.source_path, output_path)
+                result = run(
+                    ['sass', document.source_path, output_path],
+                    capture_output=True)
 
-                is_changed = (output_time_ns <= source_stat_ns) or (output_stat.st_size != source_stat.st_size)
-            except:
-                pass
-
-            if is_changed:
-                makedirs(dirname(output_path), exist_ok=True)
-                copy(source_path, output_path)
+                if result.returncode != 0:
+                    error('Document "%s" cannot be processed by SASS.', document.source_path)
+                    error(result.stderr.decode('utf-8'))
+                    exit(1)
+            else:
+                copy(document.source_path, output_path)
 
 
 __all__ = [

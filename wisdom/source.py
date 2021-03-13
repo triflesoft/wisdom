@@ -172,12 +172,14 @@ class TemplateTocDiscoveryParser(HTMLParser):
 class Document:
     def __init__(
             self,
+            preprocessor: str,
             source_path: str,
             output_path: str,
             loader_path: str,
             timestamp_ns: int,
             is_changed: bool,
             component: Component):
+        self.preprocessor = preprocessor
         self.source_path = source_path
         self.output_path = output_path
         self.loader_path = loader_path
@@ -237,21 +239,53 @@ class SourceDiscovery:
                             match = component.template_path_pattern.fullmatch(loader_path)
 
                             if match:
-                                template_file_paths.append((source_path, loader_path, directory_entry.stat(), component, match.groupdict()))
+                                output_path = join(self.arguments.output_path, match.group('output_path'))
+                                template_file_paths.append((source_path, loader_path, output_path, directory_entry.stat(), component, match.groupdict()))
                                 break
 
                         if component.document_path_pattern:
                             match = component.document_path_pattern.fullmatch(loader_path)
 
                             if match:
-                                document_file_paths.append((source_path, loader_path, directory_entry.stat(), component, match.groupdict()))
+                                output_path = join(self.arguments.output_path, match.group('output_path'))
+                                document_file_paths.append((source_path, loader_path, output_path, directory_entry.stat(), component))
                                 break
+
+        directory_queue = []
+        design_set = set()
+
+        for component in self.configuration.components.values():
+            if not component.design_name in design_set:
+                design_set.add(component.design_name)
+                design_path = join(self.arguments.design_path, component.design_name, 'generate/documents')
+                directory_queue.append((len(design_path) + 1, design_path))
+
+        while directory_queue:
+            root_prefix_length, root_path = directory_queue.pop()
+
+            for directory_entry in scandir(root_path):
+                if directory_entry.is_dir(follow_symlinks=False):
+                    directory_queue.append((root_prefix_length, directory_entry.path))
+                elif directory_entry.is_file(follow_symlinks=False):
+                    source_path = directory_entry.path
+
+                    if (
+                        source_path.endswith('.css') or
+                        source_path.endswith('.jpg') or
+                        source_path.endswith('.js') or
+                        source_path.endswith('.png') or
+                        source_path.endswith('.sass') or
+                        source_path.endswith('.scss') or
+                        source_path.endswith('.svg') or
+                        source_path.endswith('.txt')):
+                        loader_path = directory_entry.path[root_prefix_length:]
+                        output_path = join(self.arguments.output_path, loader_path)
+                        document_file_paths.append((source_path, loader_path, output_path, directory_entry.stat(), None))
 
         template_file_paths = sorted(template_file_paths, key=lambda fp: fp[1], reverse=True)
 
         while template_file_paths:
-            source_path, loader_path, source_stat, component, match_dict = template_file_paths.pop()
-            output_path = join(self.arguments.output_path, match_dict['output_path'])
+            source_path, loader_path, output_path, source_stat, component, match_dict = template_file_paths.pop()
             output_link = match_dict['output_path'].lstrip('/')
             name = match_dict['name']
             version = match_dict['version']
@@ -316,8 +350,19 @@ class SourceDiscovery:
         document_file_paths = sorted(document_file_paths, key=lambda fp: fp[1], reverse=True)
 
         while document_file_paths:
-            source_path, loader_path, source_stat, component, match_dict = document_file_paths.pop()
-            output_path = join(self.arguments.output_path, match_dict['output_path'])
+            source_path, loader_path, output_path, source_stat, component = document_file_paths.pop()
+            source_name = basename(source_path)
+            preprocessor = None
+
+            if source_name.startswith('_'):
+                continue
+            elif source_path.endswith('.sass'):
+                preprocessor = 'sass'
+                output_path = output_path[:-4] + 'css'
+            elif source_path.endswith('.scss'):
+                preprocessor = 'scss'
+                output_path = output_path[:-4] + 'css'
+
             source_timestamp_ns = max(source_stat.st_ctime_ns, source_stat.st_mtime_ns)
             is_changed = True
 
@@ -331,6 +376,7 @@ class SourceDiscovery:
                 pass
 
             document = Document(
+                preprocessor,
                 source_path,
                 output_path,
                 loader_path,
