@@ -1,12 +1,13 @@
 from logging import debug
 from logging import error
-from logging import info
 from os.path import expanduser
 from os.path import join
 from re import compile
 from sys import exit
 from typing import Optional
 from yaml import safe_load
+
+from .arguments import Arguments
 
 
 class Version:
@@ -36,13 +37,13 @@ class Culture:
 
 class Component:
     def __init__(
-        self,
-        index: int,
-        code: str,
-        design_name: str,
-        template_path_pattern: str,
-        document_path_pattern: str,
-        variables: dict):
+            self,
+            index: int,
+            code: str,
+            design_name: str,
+            template_path_pattern: str,
+            document_path_pattern: str,
+            variables: dict):
         self.index = index
         self.code = code
         self.design_name = design_name
@@ -75,7 +76,7 @@ class Component:
 
 
 class Configuration:
-    def __init__(self, arguments):
+    def __init__(self, arguments: Arguments):
         self.versions = {}
         self.cultures = {}
         self.components = {}
