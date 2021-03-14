@@ -62,14 +62,17 @@ def main():
     info('wisdom-cli "%s"', '" "'.join(argv))
 
 
-    if arguments.inotify:
+    if arguments.watch_path:
         from inotify.adapters import InotifyTree
         from inotify.constants import IN_CLOSE_WRITE
 
-        inotify = InotifyTree(arguments.source_path, IN_CLOSE_WRITE, 24*60*60)
+        inotify = InotifyTree(arguments.watch_path, IN_CLOSE_WRITE, 24*60*60)
 
         while True:
-            process(arguments)
+            try:
+                process(arguments)
+            except RuntimeError:
+                pass
 
             for e in inotify.event_gen():
                 if e:
@@ -77,10 +80,14 @@ def main():
                     info('inotify "%s/%s"', path, name)
                 else:
                     break
+
             sleep(0.1)
 
     else:
-        process(arguments)
+        try:
+            process(arguments)
+        except RuntimeError:
+            exit(1)
 
 if __name__ == '__main__':
     main()

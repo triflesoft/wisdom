@@ -31,9 +31,13 @@ class Arguments:
             action='store_true',
             help='Regenerate output files for changed source files only. Compares timestamps.')
         argument_parser.add_argument(
-            '-i', '--inotify',
-            action='store_true',
-            help='Continuously watch source directory for changes and regenerate output. --changed-only is recommended for better performance.')
+            '-w', '--watch',
+            action='store',
+            default=None,
+            const=True,
+            nargs='?',
+            metavar='/PATH/TO/WATCH/',
+            help='Continuously watch a directory for changes and regenerate output. Watches source directory by default. Also specify --changed-only option for better performance.')
         argument_parser.add_argument(
             '-v', '--verbose',
             action='count',
@@ -42,6 +46,9 @@ class Arguments:
         self._arguments = argument_parser.parse_args()
 
     def _check(self):
+        if self._arguments.watch is True:
+            self._arguments.watch = self._arguments.source
+
         paths = {
             'source': {
                 'original': self._arguments.source,
@@ -56,6 +63,12 @@ class Arguments:
                 'normalized': normpath(abspath(self._arguments.output)),
             },
         }
+
+        if self._arguments.watch:
+            paths['watch'] = {
+                'original': self._arguments.watch,
+                'normalized': normpath(abspath(self._arguments.watch)),
+            }
 
         for parameter_name, values in paths.items():
             if not isdir(values['normalized']):
@@ -89,8 +102,8 @@ class Arguments:
         return self._arguments.changed_only
 
     @property
-    def inotify(self):
-        return self._arguments.inotify
+    def watch_path(self):
+        return self._arguments.watch
 
     @property
     def verbosity_level(self):
