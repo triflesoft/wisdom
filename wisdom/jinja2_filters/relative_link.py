@@ -3,8 +3,8 @@ from os.path import dirname
 from os.path import relpath
 
 
-def discover_relative_link(path):
-    return path
+def discover_relative_link(resource_link):
+    return resource_link
 
 
 @contextfilter

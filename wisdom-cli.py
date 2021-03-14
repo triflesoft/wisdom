@@ -19,8 +19,8 @@ def process(arguments):
     source = Source(arguments, configuration)
     source.discover()
     output = Output(arguments, configuration, source)
-    output.generate_jinja2()
     output.generate_static()
+    output.generate_jinja2()
     time_nano_till = perf_counter_ns()
     span_nano = time_nano_till - time_nano_from
     span_micro = span_nano // 1000
