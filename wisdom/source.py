@@ -106,7 +106,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
                 self.source_path,
                 self.active_tag_name,
                 name)
-            exit(1)
+            raise RuntimeError()
         else:
             if name in self.TAG_LEVELS:
                 self.active_tag_name = name
@@ -117,7 +117,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
                         'Template "%s" TOC is inconsistent, tag <%s> has not id attribute specified.',
                         self.source_path,
                         self.active_tag_name)
-                    exit(1)
+                    raise RuntimeError()
 
                 if self.active_tag_attr_id in self.attr_ids:
                     error(
@@ -125,7 +125,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
                         self.source_path,
                         self.active_tag_name,
                         self.active_tag_attr_id)
-                    exit(1)
+                    raise RuntimeError()
 
                 if len(self.toc) > 0:
                     if self.TAG_LEVELS[self.active_tag_name] - self.last_tag_level > 1:
@@ -136,7 +136,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
                             self.active_tag_attr_id,
                             self.toc[-1].name,
                             self.toc[-1].attr_id)
-                        exit(1)
+                        raise RuntimeError()
 
                 self.last_tag_level = self.TAG_LEVELS[self.active_tag_name]
 
@@ -148,7 +148,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
                     self.source_path,
                     name,
                     self.active_tag_name)
-                exit(1)
+                raise RuntimeError()
             else:
                 while (len(self.ancestors) > 0) and (self.TAG_LEVELS[self.ancestors[-1].name] >= self.TAG_LEVELS[self.active_tag_name]):
                     self.ancestors.pop()
@@ -400,7 +400,7 @@ class SourceDiscovery:
                                     template.source_path,
                                     version_code,
                                     mutation_family)
-                                exit(1)
+                                raise RuntimeError()
 
                             try:
                                 mutation = self.templates[template_component][mutation_version][template_culture][mutation_family]
@@ -410,7 +410,7 @@ class SourceDiscovery:
                                     template.source_path,
                                     mutation_family,
                                     version_code)
-                                exit(1)
+                                raise RuntimeError()
 
                             self.template_version_mutations[template_component][template_family][template_culture][mutation_version] = mutation
                             self.template_version_mutations[mutation.component][mutation.family][mutation.culture][template_version] = template
@@ -429,7 +429,7 @@ class SourceDiscovery:
                                     template.source_path,
                                     culture_code,
                                     mutation_family)
-                                exit(1)
+                                raise RuntimeError()
 
                             try:
                                 mutation = self.templates[template_component][template_version][mutation_culture][mutation_family]
@@ -439,7 +439,7 @@ class SourceDiscovery:
                                     template.source_path,
                                     mutation_family,
                                     culture_code)
-                                exit(1)
+                                raise RuntimeError()
 
                             self.template_culture_mutations[template_component][template.family][template_version][mutation_culture] = mutation
                             self.template_culture_mutations[mutation.component][mutation.family][mutation.version][template_culture] = template
@@ -495,41 +495,42 @@ class SourceDiscovery:
             for template_version, culture_templates in version_templates.items():
                 for template_culture, family_templates in culture_templates.items():
                     for template_family, template in family_templates.items():
-                        if (not self.arguments.changed_only) or template.is_changed:
-                            design_name = template.design_name
-                            jinja2_environment = jinja2_environments.get(design_name, None)
+                        if template.source_path.endswith('.html.j2'):
+                            if (not self.arguments.changed_only) or template.is_changed:
+                                design_name = template.design_name
+                                jinja2_environment = jinja2_environments.get(design_name, None)
 
-                            if not jinja2_environment:
-                                jinja2_loader = PrefixLoader({
-                                    'source': FileSystemLoader(self.arguments.source_path),
-                                    'design': FileSystemLoader(join(self.arguments.design_path, design_name, 'discover/templates')),
-                                })
-                                jinja2_environment = SandboxedEnvironment(
-                                    trim_blocks=True,
-                                    lstrip_blocks=True,
-                                    keep_trailing_newline=True,
-                                    extensions=JINJA2_DISCOVER_EXTENSIONS,
-                                    autoescape=True,
-                                    loader=jinja2_loader,
-                                    auto_reload=False)
-                                jinja2_environment.filters.update(JINJA2_DISCOVER_FILTERS)
-                                jinja2_environments[design_name] = jinja2_environment
+                                if not jinja2_environment:
+                                    jinja2_loader = PrefixLoader({
+                                        'source': FileSystemLoader(self.arguments.source_path),
+                                        'design': FileSystemLoader(join(self.arguments.design_path, design_name, 'discover/templates')),
+                                    })
+                                    jinja2_environment = SandboxedEnvironment(
+                                        trim_blocks=True,
+                                        lstrip_blocks=True,
+                                        keep_trailing_newline=True,
+                                        extensions=JINJA2_DISCOVER_EXTENSIONS,
+                                        autoescape=True,
+                                        loader=jinja2_loader,
+                                        auto_reload=False)
+                                    jinja2_environment.filters.update(JINJA2_DISCOVER_FILTERS)
+                                    jinja2_environments[design_name] = jinja2_environment
 
-                            jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))
-                            output_html = jinja2_template.render({'this': template})
-                            toc_parser = TemplateTocDiscoveryParser(template.source_path)
-                            toc_parser.feed(output_html)
+                                jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))
+                                output_html = jinja2_template.render({'this': template})
+                                toc_parser = TemplateTocDiscoveryParser(template.source_path)
+                                toc_parser.feed(output_html)
 
-                            if toc_parser.tag_stats['h1'] == 0:
-                                warning(
-                                    'Template "%s" TOC is inconsistent, no <h1> tag was found.',
-                                    template.source_path)
-                            elif toc_parser.tag_stats['h1'] >= 2:
-                                warning(
-                                    'Template "%s" TOC is inconsistent, too many <h1> tags was found.',
-                                    template.source_path)
+                                if toc_parser.tag_stats['h1'] == 0:
+                                    warning(
+                                        'Template "%s" TOC is inconsistent, no <h1> tag was found.',
+                                        template.source_path)
+                                elif toc_parser.tag_stats['h1'] >= 2:
+                                    warning(
+                                        'Template "%s" TOC is inconsistent, too many <h1> tags was found.',
+                                        template.source_path)
 
-                            template.toc = toc_parser.toc
+                                template.toc = toc_parser.toc
 
 
 class Source:

@@ -53,23 +53,23 @@ class Component:
 
         if 'output_path' not in self.template_path_pattern.groupindex:
             error('Mandatory group "output_path" is missing from template_path_pattern in component "%s".', code)
-            exit(1)
+            raise RuntimeError()
 
         if 'name' not in self.template_path_pattern.groupindex:
             error('Mandatory group "name" is missing from template_path_pattern in component "%s".', code)
-            exit(1)
+            raise RuntimeError()
 
         if 'version' not in self.template_path_pattern.groupindex:
             error('Mandatory group "version" is missing from template_path_pattern in component "%s".', code)
-            exit(1)
+            raise RuntimeError()
 
         if 'culture' not in self.template_path_pattern.groupindex:
             error('Mandatory group "culture" is missing from template_path_pattern in component "%s".', code)
-            exit(1)
+            raise RuntimeError()
 
         if 'output_path' not in self.document_path_pattern.groupindex:
             error('Mandatory group "output_path" is missing from document_path_pattern in component "%s".', code)
-            exit(1)
+            raise RuntimeError()
 
     def __repr__(self):
         return f'Component(code="{self.code}", design_name="{self.design_name}")'
@@ -100,11 +100,11 @@ class Configuration:
 
         if 'versions' not in configuration:
             error('Configuration defines no versions.')
-            exit(1)
+            raise RuntimeError()
 
         if 'cultures' not in configuration:
             error('Configuration defines no cultures.')
-            exit(1)
+            raise RuntimeError()
 
         version: Optional[Version] = None
 

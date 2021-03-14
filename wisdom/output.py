@@ -90,7 +90,7 @@ class Output:
                 if result.returncode != 0:
                     error('Document "%s" cannot be processed by SASS.', document.source_path)
                     error(result.stderr.decode('utf-8'))
-                    exit(1)
+                    raise RuntimeError()
             else:
                 copy(document.source_path, output_path)
 

@@ -38,9 +38,9 @@ class GraphvizGenerateExtension(generate_extension('GraphvizGenerateExtensionBas
             if result.returncode != 0:
                 error('Document "%s" contains invalid GraphViz markup.', context['template'].source_path)
                 error(result.stderr)
-                exit(1)
+                raise RuntimeError()
 
             with open(local_path, 'wb') as image_file:
                 image_file.write(result.stdout)
 
-        return f'<div class="illustration illustration-graphviz"><img class="illustration illustration-plantuml" src="{remote_url}" alt="{description}" /><p class="illustration illustration-plantuml">{description}</p></div>'
+        return f'<figure class="illustration illustration-graphviz"><img class="illustration illustration-plantuml" src="{remote_url}" alt="{description}" /><figcaption class="illustration illustration-plantuml">{description}</figcaption></figure>'
