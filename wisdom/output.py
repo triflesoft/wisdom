@@ -24,6 +24,7 @@ class Output:
         jinja2_environments = {}
 
         hierarchy = defaultdict(lambda : defaultdict(list))
+        templates = defaultdict(lambda : defaultdict(list))
 
         for template_component, version_templates in self.source.templates.items():
             for template_version, culture_templates in version_templates.items():
@@ -31,6 +32,8 @@ class Output:
                     for template in family_templates:
                         if template.parent is None:
                             hierarchy[template_version][template_culture].append(template)
+
+                        templates[template_version][template_culture].append(template)
 
         for template_component, version_templates in self.source.templates.items():
             for template_version, culture_templates in version_templates.items():
@@ -63,6 +66,7 @@ class Output:
                                 'version': template_version,
                                 'culture': template_culture,
                                 'hierarchy': hierarchy[template_version][template_culture],
+                                'templates': templates[template_version][template_culture],
                                 'this': template,
                             })
                             makedirs(dirname(template.output_path), exist_ok=True)
