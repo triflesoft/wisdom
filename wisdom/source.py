@@ -12,7 +12,6 @@ from os.path import basename
 from os.path import join
 from re import compile
 from re import DOTALL
-from sys import exit
 from typing import Optional
 from yaml import safe_load
 
@@ -59,7 +58,6 @@ class Template:
         self.prev_sibling = None
         self.next_sibling = None
         self.children = []
-        self.number = 0
         self.toc = []
 
     def __repr__(self):
@@ -291,7 +289,10 @@ class SourceDiscovery:
             version = match_dict['version']
             culture = match_dict['culture']
             source_timestamp_ns = max(source_stat.st_ctime_ns, source_stat.st_mtime_ns)
-            variables = {'title': basename(name).title()}
+            variables = {
+                'title': basename(name).title(),
+                'outline': None
+            }
             version_custom_mutations = {}
             culture_custom_mutations = {}
 
@@ -303,8 +304,9 @@ class SourceDiscovery:
                     if comment_match:
                         try:
                             template_config = safe_load(comment_match.group('comment'))
-                            variables = template_config.get('variables', variables)
                             mutations = template_config.get('mutations', None)
+
+                            variables.update(template_config.get('variables', {}))
 
                             if mutations:
                                 version_custom_mutations = mutations.get('version', {})
@@ -466,6 +468,12 @@ class SourceDiscovery:
                         while parent_template:
                             if template.family.startswith(parent_template.family):
                                 template.parent = parent_template
+
+                                if template.variables['outline'] and parent_template.variables["outline"]:
+                                    template.variables['outline'] = f'{parent_template.variables["outline"]}.{template.variables["outline"]}'
+                                else:
+                                    template.variables['outline'] = ''
+
                                 parent_template.children.append(template)
 
                                 while parent_template:
@@ -486,7 +494,6 @@ class SourceDiscovery:
                         for index in range(0, len(template.children) - 1):
                             template.children[index].next_sibling = template.children[index + 1]
                             template.children[index + 1].prev_sibling = template.children[index]
-                            template.children[index + 1].number = index + 1
 
     def calculate_template_toc(self):
         jinja2_environments = {}
@@ -553,7 +560,10 @@ class Source:
         for template_component, version_templates in source_discovery.templates.items():
             for template_version, culture_templates in version_templates.items():
                 for template_culture, family_templates in culture_templates.items():
-                    templates = sorted(family_templates.values(), key=lambda t: t.loader_path)
+                    templates = sorted(family_templates.values(), key=lambda t: str(t.variables['outline']))
+
+                    for template in templates:
+                        template.children = sorted(template.children, key=lambda t: str(t.variables['outline']))
 
                     if template_version is None:
                         for version in self.configuration.versions.values():

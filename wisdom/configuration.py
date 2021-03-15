@@ -3,7 +3,6 @@ from logging import error
 from os.path import expanduser
 from os.path import join
 from re import compile
-from sys import exit
 from typing import Optional
 from yaml import safe_load
 
