@@ -285,12 +285,12 @@ class SourceDiscovery:
         while template_file_paths:
             source_path, loader_path, output_path, source_stat, component, match_dict = template_file_paths.pop()
             output_link = match_dict['output_path'].lstrip('/')
-            name = match_dict['name']
+            family = match_dict['family']
             version = match_dict['version']
             culture = match_dict['culture']
             source_timestamp_ns = max(source_stat.st_ctime_ns, source_stat.st_mtime_ns)
             variables = {
-                'title': basename(name).title(),
+                'title': basename(family).title(),
                 'outline': None
             }
             version_custom_mutations = {}
@@ -333,7 +333,7 @@ class SourceDiscovery:
                 source_timestamp_ns,
                 is_changed,
                 component,
-                name,
+                family,
                 self.configuration.versions[version] if version else None,
                 self.configuration.cultures[culture] if culture else None,
                 component.design_name,
