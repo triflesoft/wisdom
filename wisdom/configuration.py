@@ -54,8 +54,8 @@ class Component:
             error('Mandatory group "output_path" is missing from template_path_pattern in component "%s".', code)
             raise RuntimeError()
 
-        if 'name' not in self.template_path_pattern.groupindex:
-            error('Mandatory group "name" is missing from template_path_pattern in component "%s".', code)
+        if 'family' not in self.template_path_pattern.groupindex:
+            error('Mandatory group "family" is missing from template_path_pattern in component "%s".', code)
             raise RuntimeError()
 
         if 'version' not in self.template_path_pattern.groupindex:
