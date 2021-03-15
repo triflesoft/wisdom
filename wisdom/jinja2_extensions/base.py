@@ -65,7 +65,8 @@ def _generate_extension_parse(self, close_tag, default_attributes, parser):
         while parser.stream.current.type != 'block_end':
             if parser.stream.current.type in ('name', 'string'):
                 args.append(nodes.Const(parser.stream.current.value))
-                next(parser.stream)
+
+            next(parser.stream)
 
         for index, value in enumerate(default_attributes):
             if len(args) <= index + 1:
