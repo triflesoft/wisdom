@@ -4,21 +4,13 @@ from .base import discover_extension
 from .base import generate_extension
 
 
-ICON_MAP = {
-    'caution': '170-fire.svg',
-    'note':    '269-info.svg',
-    'tip':     '082-bell.svg',
-    'warning': '264-warning.svg',
-}
-
-
 AdmonitionDiscoverExtension = discover_extension('AdmonitionDiscoverExtension', 'admonition')
 
 
 class AdmonitionGenerateExtension(generate_extension('AdmonitionGenerateExtensionBase', 'admonition', ['note'])):
     def _process_markup(self, context, kind, caller):
         this_output_link = context['this'].output_link
-        icon_path = 'static/images/icons/' + ICON_MAP.get(kind, '490-svg.svg')
+        icon_path = f'static/images/icon-admonition-{kind}.svg'
         icon_link = relpath(icon_path, dirname(this_output_link))
         text = str(caller())
 
