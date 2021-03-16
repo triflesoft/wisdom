@@ -13,4 +13,4 @@ class MarkDownGenerateExtension(generate_extension('MarkDownGenerateExtensionBas
         code_ast = Parser().parse(code_text)
         code_html = HtmlRenderer().render(code_ast)
 
-        return f'<code class="pygments"><pre>{code_html}</pre></code>'
+        return code_html
