@@ -8,7 +8,6 @@ body {
             grid-template-rows: auto auto;
 
             > article {
-                background-color: config.$main__article__background_color;
                 grid-column-start: 1;
                 grid-column-end: span 1;
                 grid-row-start: 1;
