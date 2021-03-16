@@ -5,6 +5,7 @@ from os import makedirs
 from os.path import dirname
 from os.path import isfile
 from os.path import join
+from os.path import relpath
 from subprocess import run
 
 from .base import discover_extension
@@ -25,7 +26,8 @@ class PlantUmlGenerateExtension(generate_extension('PlantUmlGenerateExtensionBas
         plantuml_prefix = context['component'].variables.get('plantuml_output_prefix', 'static/images/plantuml').strip('/')
         plantuml_executable = context['component'].variables.get(f'plantuml_jar', 'plantuml.jar')
         local_path = join(output_path, plantuml_prefix, image_name)
-        remote_url = '/' + join(plantuml_prefix, image_name)
+        this_output_link = context['this'].output_link
+        image_link = relpath(join(plantuml_prefix, image_name), dirname(this_output_link))
 
         if not isfile(local_path):
             makedirs(dirname(local_path), exist_ok=True)
@@ -43,4 +45,4 @@ class PlantUmlGenerateExtension(generate_extension('PlantUmlGenerateExtensionBas
             with open(local_path, 'wb') as image_file:
                 image_file.write(result.stdout)
 
-        return f'<figure class="illustration illustration-plantuml"><img class="illustration illustration-plantuml" src="{remote_url}" alt="{description}" /><figcaption class="illustration illustration-plantuml">{description}</figcaption></figure>'
+        return f'<figure class="illustration illustration-plantuml"><img class="illustration illustration-plantuml" src="{image_link}" alt="{description}" /><figcaption class="illustration illustration-plantuml">{description}</figcaption></figure>'
