@@ -1,0 +1,163 @@
+$color-blue-1: #CEECFA;
+$color-blue-2: #9AD9F2;
+$color-blue-3: #67C6EB;
+$color-blue-4: #33B2E3;
+$color-blue-5: #009FDB;
+$color-blue-6: #008BC8;
+$color-blue-7: #0076B4;
+$color-blue-8: #005D92;
+$color-blue-9: #004370;
+
+$color-purple-1: #EAE3FE;
+$color-purple-2: #D7CBF3;
+$color-purple-3: #BEAAE5;
+$color-purple-4: #A488D8;
+$color-purple-5: #8B67CA;
+$color-purple-6: #7B5ABA;
+$color-purple-7: #694AA6;
+$color-purple-8: #563A92;
+$color-purple-9: #442A7E;
+
+$color-red-1: #FEDFD9;
+$color-red-2: #F9C1BA;
+$color-red-3: #F4978F;
+$color-red-4: #F06C63;
+$color-red-5: #EB4238;
+$color-red-6: #DC2D1E;
+$color-red-7: #C01E1C;
+$color-red-8: #A30E1B;
+$color-red-9: #870019;
+
+$color-orange-1: #FEE6BA;
+$color-orange-2: #F7CC93;
+$color-orange-3: #F6B169;
+$color-orange-4: #F4953F;
+$color-orange-5: #F37A15;
+$color-orange-6: #EB630B;
+$color-orange-7: #CC5207;
+$color-orange-8: #AE4003;
+$color-orange-9: #8F2F00;
+
+$color-cyan-1: #D1EBEA;
+$color-cyan-2: #9DDCDC;
+$color-cyan-3: #68CCCE;
+$color-cyan-4: #34BDC0;
+$color-cyan-5: #00ADB2;
+$color-cyan-6: #009DA4;
+$color-cyan-7: #008790;
+$color-cyan-8: #00717C;
+$color-cyan-9: #005B68;
+
+$color-yellow-1: #FEF1B5;
+$color-yellow-2: #FAE390;
+$color-yellow-3: #F6D46A;
+$color-yellow-4: #F2C645;
+$color-yellow-5: #EEB81F;
+$color-yellow-6: #E5A600;
+$color-yellow-7: #C99300;
+$color-yellow-8: #A97C00;
+$color-yellow-9: #8A6600;
+
+$color-pink-1: #FEDEF1;
+$color-pink-2: #FEC3E3;
+$color-pink-3: #F899C9;
+$color-pink-4: #F270AE;
+$color-pink-5: #EC4694;
+$color-pink-6: #E1237E;
+$color-pink-7: #C8176D;
+$color-pink-8: #B00B5B;
+$color-pink-9: #860043;
+
+$color-green-1: #DFF3BD;
+$color-green-2: #C6E499;
+$color-green-3: #ADD576;
+$color-green-4: #94C652;
+$color-green-5: #7BB72E;
+$color-green-6: #5FA913;
+$color-green-7: #4D8E12;
+$color-green-8: #3A7410;
+$color-green-9: #28590F;
+
+$color-gray-1: #E5E8EB;
+$color-gray-2: #CFD2D5;
+$color-gray-3: #B5B8BB;
+$color-gray-4: #9FA2A5;
+$color-gray-5: #85888B;
+$color-gray-6: #727578;
+$color-gray-7: #585B5E;
+$color-gray-8: #424548;
+$color-gray-9: #2F3235;
+
+$color-white-1: #FAFBFD;
+$color-white-2: #F5F8FB;
+
+
+$common__border_width: 0.1rem;
+$common__hx__font_family: 'Roboto', sans-serif;
+$common__hx__font_weight: 300;
+$common__h1__font_size: 3.0rem;
+$common__h2__font_size: 2.4rem;
+$common__h3__font_size: 2.0rem;
+$common__h4__font_size: 1.8rem;
+$common__h5__font_size: 1.6rem;
+$common__h6__font_size: 1.4rem;
+$common__a__color:        $color-blue-8;
+$common__a__color__hover: $color-blue-6;
+$common__code__font_family: 'Source Code Pro', monospace;
+$common__code__font_weight: 400;
+$common__code__font_size: 1rem;
+
+$body__font_family: 'Open Sans', sans-serif;
+$body__font_weight: 400;
+$body__font_size: 12pt;
+$body__responsive_threshold: 1024px;
+
+$header__background_color: $color-white-2;
+$header__box_shadow_color: $color-gray-1;
+$header__menu__background_color__hover: $color-gray-1;
+$header__menu__font_family: 'Roboto', sans-serif;
+$header__menu__font_weight: 300;
+$header__menu__component0__font_size: 1.4rem;
+$header__menu__component1__font_size: 1.2rem;
+$header__menu__toc0__font_size: 1.4rem;
+$header__menu__toc1__font_size: 1.0rem;
+$header__menu__toc2__font_size: 1.0rem;
+$header__menu__toc3__font_size: 0.9rem;
+$header__menu__toc4__font_size: 0.9rem;
+$header__menu__toc5__font_size: 0.8rem;
+$header__menu__toc6__font_size: 0.8rem;
+$header__menu__toc7__font_size: 0.7rem;
+
+$aside__li_color__before: $color-gray-5;
+$aside__background_color: $color-white-2;
+$aside__menu__font_family: 'Roboto', sans-serif;
+$aside__menu__font_weight: 300;
+$aside__menu__hierarchy0__size__before: 1.0rem;
+$aside__menu__hierarchy1__size__before: 1.0rem;
+$aside__menu__hierarchy2__size__before: 0.9rem;
+$aside__menu__hierarchy3__size__before: 0.9rem;
+$aside__menu__hierarchy4__size__before: 0.8rem;
+$aside__menu__hierarchy5__size__before: 0.8rem;
+$aside__menu__hierarchy6__size__before: 0.7rem;
+$aside__menu__hierarchy7__size__before: 0.7rem;
+$aside__menu__hierarchy0__size: 1.2rem;
+$aside__menu__hierarchy1__size: 1.2rem;
+$aside__menu__hierarchy2__size: 1.0rem;
+$aside__menu__hierarchy3__size: 1.0rem;
+$aside__menu__hierarchy4__size: 0.9rem;
+$aside__menu__hierarchy5__size: 0.9rem;
+$aside__menu__hierarchy6__size: 0.8rem;
+$aside__menu__hierarchy7__size: 0.8rem;
+
+$main__article__background_color: $color-white-1;
+$main__article__mutation_separator___color: $color-blue-9;
+$main__article__menu__font_family: 'Roboto', sans-serif;
+$main__article__menu__font_weight: 300;
+$main__article__admonition_note__background_color: $color-blue-1;
+$main__article__admonition_tip__background_color: $color-green-1;
+$main__article__admonition_warning__background_color: $color-red-1;
+$main__article__admonition_caution__background_color: $color-orange-1;
+$main__aside__background_color: $color-white-2;
+
+$footer__background_color: $color-white-2;
+$footer__box_shadow_color: $color-gray-1;

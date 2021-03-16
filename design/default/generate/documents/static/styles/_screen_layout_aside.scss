@@ -1,0 +1,124 @@
+@use 'config';
+
+body {
+    > aside.nav-hierarchy {
+        padding: 1rem;
+
+        > nav.nav-hierarchy {
+            menu.nav-hierarchy {
+                list-style-type: none;
+                margin: 0 0 0 1rem;
+
+                li.nav-hierarchy {
+                    color: config.$aside__li_color__before;
+
+                    &::before {
+                        content: ' ' attr(data-outline) ' ';
+                    }
+
+                    a.nav-hierarchy {
+                        display: inline-block;
+                        line-height: 1.5;
+                    }
+
+                    &.selected {
+                        > a.nav-hierarchy {
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
+
+            > menu.nav-hierarchy.nav-hierarchy-0 {
+                > li.nav-hierarchy.nav-hierarchy-0 {
+                    font-family: config.$aside__menu__font_family;
+                    font-weight: config.$aside__menu__font_weight;
+                    font-size: config.$aside__menu__hierarchy0__size__before;
+
+                    > a {
+                        font-size: config.$aside__menu__hierarchy0__size;
+                    }
+
+                    > menu.nav-hierarchy.nav-hierarchy-1 {
+                        > li.nav-hierarchy.nav-hierarchy-1 {
+                            font-size: config.$aside__menu__hierarchy1__size__before;
+
+                            > a {
+                                font-size: config.$aside__menu__hierarchy1__size;
+                            }
+
+                            > menu.nav-hierarchy.nav-hierarchy-2 {
+                                > li.nav-hierarchy.nav-hierarchy-2 {
+                                    font-size: config.$aside__menu__hierarchy2__size__before;
+
+                                    > a {
+                                        font-size: config.$aside__menu__hierarchy2__size;
+                                    }
+
+                                    > menu.nav-hierarchy.nav-hierarchy-3 {
+                                        > li.nav-hierarchy.nav-hierarchy-3 {
+                                            font-size: config.$aside__menu__hierarchy3__size__before;
+
+                                            > a {
+                                                font-size: config.$aside__menu__hierarchy3__size;
+                                            }
+
+                                            > menu.nav-hierarchy.nav-hierarchy-4 {
+                                                > li.nav-hierarchy.nav-hierarchy-4 {
+                                                    font-size: config.$aside__menu__hierarchy4__size__before;
+
+                                                    > a {
+                                                        font-size: config.$aside__menu__hierarchy4__size;
+                                                    }
+
+                                                    > menu.nav-hierarchy.nav-hierarchy-5 {
+                                                        > li.nav-hierarchy.nav-hierarchy-5 {
+                                                            font-size: config.$aside__menu__hierarchy5__size__before;
+
+                                                            > a {
+                                                                font-size: config.$aside__menu__hierarchy5__size;
+                                                            }
+
+                                                            > menu.nav-hierarchy.nav-hierarchy-6 {
+                                                                > li.nav-hierarchy.nav-hierarchy-6 {
+                                                                    font-size: config.$aside__menu__hierarchy6__size__before;
+
+                                                                    > a {
+                                                                        font-size: config.$aside__menu__hierarchy6__size;
+                                                                    }
+
+                                                                    > menu.nav-hierarchy.nav-hierarchy-7 {
+                                                                        > li.nav-hierarchy.nav-hierarchy-7 {
+                                                                            font-size: config.$aside__menu__hierarchy7__size__before;
+
+                                                                            > a {
+                                                                                font-size: config.$aside__menu__hierarchy7__size;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: config.$body__responsive_threshold) {
+    body {
+        > aside.nav-hierarchy {
+            position: sticky;
+            top: 4rem;
+        }
+    }
+}

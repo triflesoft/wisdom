@@ -1,0 +1,142 @@
+@use 'config';
+
+body {
+    > main {
+        > section {
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-rows: auto auto;
+
+            > article {
+                background-color: config.$main__article__background_color;
+                grid-column-start: 1;
+                grid-column-end: span 1;
+                grid-row-start: 1;
+                grid-row-end: span 1;
+                padding: 1rem 1rem 1rem 3rem;
+
+                &.nav-relations {
+                    display: grid;
+                    grid-template-columns: auto 1fr auto;
+                    grid-template-rows: auto auto auto 1fr;
+
+                    > h1 {
+                        grid-column-start: 1;
+                        grid-column-end: span 3;
+                        grid-row-start: 1;
+                        grid-row-end: span 1;
+                    }
+
+                    > nav.nav-toc {
+                        grid-column-start: 3;
+                        grid-column-end: span 1;
+                        grid-row-start: 1;
+                        grid-row-end: span 1;
+
+                        position: relative;
+
+                        menu.nav-toc {
+                            list-style-type: none;
+
+                            li.nav-toc {
+                                a.nav-toc {
+                                    display: inline-block;
+                                    position: relative;
+                                    padding: 0.5rem 1rem;
+                                }
+                            }
+                        }
+                    }
+
+                    > nav.nav-versions {
+                        grid-column-start: 1;
+                        grid-column-end: span 1;
+                        grid-row-start: 2;
+                        grid-row-end: span 1;
+
+                        > menu.nav-versions {
+                            list-style-type: none;
+                            font-family: config.$main__article__menu__font_family;
+                            font-weight: config.$main__article__menu__font_weight;
+
+                            > li.nav-versions {
+                                display: inline-block;
+
+                                > a.nav-versions {
+                                    padding: 0.5rem;
+                                }
+
+                                & + li.nav-versions {
+                                    border-left: 0.1rem solid config.$main__article__mutation_separator___color;
+                                }
+                            }
+                        }
+                    }
+
+                    > nav.nav-cultures {
+                        grid-column-start: 3;
+                        grid-column-end: span 1;
+                        grid-row-start: 2;
+                        grid-row-end: span 1;
+
+                        > menu.nav-cultures {
+                            list-style-type: none;
+                            font-family: config.$main__article__menu__font_family;
+                            font-weight: config.$main__article__menu__font_weight;
+
+                            > li.nav-cultures {
+                                display: inline-block;
+
+                                > a.nav-cultures {
+                                    padding: 0.5rem;
+                                }
+
+                                & + li.nav-cultures {
+                                    border-left: 0.1rem solid config.$main__article__mutation_separator___color;
+                                }
+                            }
+                        }
+                    }
+
+                    > p {
+                        grid-column-start: 1;
+                        grid-column-end: span 3;
+                        grid-row-start: 3;
+                        grid-row-end: span 1;
+                    }
+                }
+            }
+            > aside {
+                grid-column-start: 1;
+                grid-column-end: span 1;
+                grid-row-start: 2;
+                grid-row-end: span 1;
+                padding: 1rem;
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: config.$body__responsive_threshold) {
+    body {
+        > main {
+            > section {
+                grid-template-columns: 1fr 20rem;
+                grid-template-rows: auto;
+
+                > article {
+                    grid-column-start: 1;
+                    grid-column-end: span 1;
+                    grid-row-start: 1;
+                    grid-row-end: span 1;
+                }
+                > aside {
+                    grid-column-start: 2;
+                    grid-column-end: span 1;
+                    grid-row-start: 1;
+                    grid-row-end: span 1;
+                }
+            }
+        }
+    }
+}

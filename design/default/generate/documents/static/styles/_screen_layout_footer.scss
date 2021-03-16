@@ -1,0 +1,8 @@
+@use 'config';
+
+body {
+    > footer {
+        background-color: config.$footer__background_color;
+        box-shadow: 0 0 0.5rem config.$footer__box_shadow_color;
+    }
+}

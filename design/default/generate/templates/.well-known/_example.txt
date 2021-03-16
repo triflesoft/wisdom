@@ -1,0 +1,6 @@
+https://en.wikipedia.org/wiki/List_of_%2F.well-known%2F_services_offered_by_webservers
+https://www.google.com/.well-known/security.txt
+https://github.com/.well-known/security.txt
+https://www.reddit.com/.well-known/security.txt
+https://www.cloudflare.com/.well-known/security.txt
+https://www.facebook.com/.well-known/security.txt

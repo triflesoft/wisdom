@@ -1,0 +1,69 @@
+@use 'config';
+
+code.pygments {
+    pre {
+        padding: 1rem 1rem 1rem 3rem;
+        border: config.$common__border_width solid config.$color-gray-9;
+        background-color: config.$color-gray-2;
+    }
+}
+
+div.admonition {
+    margin: 1rem 0;
+
+    > div.admonition-content {
+        clear: both;
+
+        > figure.admonition {
+            float: left;
+            padding: 0.5rem;
+            margin: 0.5rem;
+
+            > img.admonition {
+                width: 4rem;
+                height: 4rem;
+            }
+        }
+
+        > p.admonition {
+            min-height: 5rem;
+            padding: 1rem 0.5rem 1rem 8rem;
+        }
+    }
+}
+
+div.admonition-note {
+    background-color: config.$main__article__admonition_note__background_color;
+    > div.admonition-content {
+        > figure.admonition-note {
+            background-color: config.$color-blue-9;
+        }
+    }
+}
+
+div.admonition-tip {
+    background-color: config.$main__article__admonition_tip__background_color;
+    > div.admonition-content {
+        > figure.admonition-tip {
+            background-color: config.$color-green-9;
+        }
+    }
+}
+
+div.admonition-warning {
+    background-color: config.$main__article__admonition_warning__background_color;
+    > div.admonition-content {
+        > figure.admonition-warning {
+            background-color: config.$color-red-9;
+        }
+    }
+}
+
+div.admonition-caution {
+    background-color: config.$main__article__admonition_caution__background_color;
+    > div.admonition-content {
+        > figure.admonition-caution {
+            background-color: config.$color-orange-9;
+        }
+    }
+}

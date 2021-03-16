@@ -1,0 +1,232 @@
+@use 'config';
+
+body {
+    > header {
+        background-color: config.$header__background_color;
+        box-shadow: 0 0 0.5rem config.$header__box_shadow_color;
+
+        > figure.logotype {
+            height: 6rem;
+
+            a.logotype > {
+                img.logotype {
+                    width: 6rem;
+                    height: 6rem;
+                }
+            }
+        }
+
+        > nav.nav-components {
+            display: block;
+
+            menu.nav-components {
+                list-style-type: none;
+
+                li.nav-components {
+                    a.nav-components {
+                        display: block;
+                        position: relative;
+                        padding: 0.5rem 1rem;
+                    }
+                }
+            }
+
+            > menu.nav-components.nav-components-0 {
+                > li.nav-components.nav-components-0 {
+                    display: inline-block;
+                    font-family: config.$header__menu__font_family;
+                    font-weight: config.$header__menu__font_weight;
+
+
+                    > a.nav-components.nav-components-0 {
+                        font-size: config.$header__menu__component0__font_size;
+                    }
+
+                    > menu.nav-components.nav-components-1 {
+                        position: absolute;
+                        visibility: hidden;
+                        opacity: 0;
+                        background-color: config.$header__menu__background_color__hover;
+
+                        > li.nav-components.nav-components-1 {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+
+        > nav.nav-toc {
+            display: none;
+
+            menu.nav-toc {
+                list-style-type: none;
+                margin: 0 0 0 1rem;
+
+                li.nav-toc {
+                    a.nav-toc {
+                        display: block;
+                        position: relative;
+                        padding: 0.5rem 1rem;
+                    }
+                }
+            }
+
+            > menu.nav-toc.nav-toc-0 {
+                > li.nav-toc.nav-toc-0 {
+                    font-family: config.$header__menu__font_family;
+                    font-weight: config.$header__menu__font_weight;
+                    font-size: config.$header__menu__toc0__font_size;
+
+                    > menu.nav-toc.nav-toc-1 {
+                        position: absolute;
+                        visibility: hidden;
+                        opacity: 0;
+                        margin: 0;
+                        background-color: config.$header__menu__background_color__hover;
+
+                        > li.nav-toc.nav-toc-1 {
+                            font-size: config.$header__menu__toc1__font_size;
+
+                            > menu.nav-toc.nav-toc-2 {
+                                > li.nav-toc.nav-toc-2 {
+                                    font-size: config.$header__menu__toc2__font_size;
+
+                                    > menu.nav-toc.nav-toc-3 {
+                                        > li.nav-toc.nav-toc-3 {
+                                            font-size: config.$header__menu__toc3__font_size;
+
+                                            > menu.nav-toc.nav-toc-4 {
+                                                > li.nav-toc.nav-toc-4 {
+                                                    font-size: config.$header__menu__toc4__font_size;
+
+                                                    > menu.nav-toc.nav-toc-5 {
+                                                        > li.nav-toc.nav-toc-5 {
+                                                            font-size: config.$header__menu__toc5__font_size;
+
+                                                            > menu.nav-toc.nav-toc-6 {
+                                                                > li.nav-toc.nav-toc-6 {
+                                                                    font-size: config.$header__menu__toc6__font_size;
+
+                                                                    > menu.nav-toc.nav-toc-7 {
+                                                                        > li.nav-toc.nav-toc-7 {
+                                                                            font-size: config.$header__menu__toc7__font_size;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: config.$body__responsive_threshold) {
+    body {
+        &[data-scroll-y="0"] { > header { height: 10rem; } }
+        &[data-scroll-y="1"] { > header { height: 9rem; } }
+        &[data-scroll-y="2"] { > header { height: 8rem; } }
+        &[data-scroll-y="3"] { > header { height: 7rem; } }
+        &[data-scroll-y="4"] { > header { height: 6rem; } }
+        &[data-scroll-y="5"] { > header { height: 5rem; } }
+
+        > header {
+            display: grid;
+            grid-template-columns: 20rem 1rem 3rem 1rem max-content 1fr 20rem 20rem;
+            grid-template-rows: 1fr auto 1fr;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            height: 4rem;
+            transition: height 0.1s;
+
+            > figure.logotype {
+                grid-column-start: 3;
+                grid-column-end: span 1;
+                grid-row-start: 2;
+                grid-row-end: span 1;
+                height: 3rem;
+
+                a.logotype > {
+                    img.logotype {
+                        width: 3rem;
+                        height: 3rem;
+                    }
+                }
+            }
+
+            > nav.nav-components {
+                display: block;
+                grid-column-start: 5;
+                grid-column-end: span 1;
+                grid-row-start: 2;
+                grid-row-end: span 1;
+                height: 3rem;
+
+                > menu.nav-components.nav-components-0 {
+                    > li.nav-components.nav-components-0 {
+                        &.has-children:hover {
+                            position: relative;
+                            background-color: config.$header__menu__background_color__hover;
+
+                            > menu.nav-components.nav-components-1 {
+                                visibility: visible;
+                                opacity: 1;
+                                top: 100%;
+                                width: 100%;
+                                background-color: config.$header__menu__background_color__hover;
+                                transition: opacity 0.5s;
+                            }
+                        }
+
+                        &:not(.has-children):hover {
+                            background-color: config.$header__menu__background_color__hover;
+                        }
+                    }
+                }
+            }
+
+            > nav.nav-toc {
+                display: block;
+                grid-column-start: 7;
+                grid-column-end: span 1;
+                grid-row-start: 2;
+                grid-row-end: span 1;
+
+                > menu.nav-toc.nav-toc-0 {
+                    > li.nav-toc.nav-toc-0 {
+                        > a.nav-toc.nav-toc-0 {
+                            width: 17rem;
+                            text-align: right;
+                        }
+
+                        &:hover {
+                            position: relative;
+                            background-color: config.$header__menu__background_color__hover;
+
+                            > menu.nav-toc.nav-toc-1 {
+                                visibility: visible;
+                                opacity: 1;
+                                z-index: 3;
+                                top: 100%;
+                                width: 100%;
+                                background-color: config.$header__menu__background_color__hover;
+                                transition: opacity 0.5s;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

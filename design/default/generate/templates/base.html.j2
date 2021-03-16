@@ -1,0 +1,144 @@
+{% macro hierarchy_navigation(template, level=0) -%}
+{% if template.children %}
+    <li class="nav-hierarchy nav-hierarchy-{{ level }}{% if template.output_path == this.output_path %} selected{% endif %} has-children" data-outline="{{ template.variables.outline|default('') }}">
+        <a class="nav-hierarchy nav-hierarchy-{{ level }}" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+        <menu class="nav-hierarchy nav-hierarchy-{{ level + 1}}">
+            {% for child in template.children %}
+            {{ hierarchy_navigation(child, level + 1) }}
+            {% endfor %}
+        </menu>
+    </li>
+{% else %}
+    <li class="nav-hierarchy nav-hierarchy-{{ level }}{% if template.output_path == this.output_path %} selected{% endif %}" data-outline="{{ template.variables.outline|default('') }}">
+        <a class="nav-hierarchy nav-hierarchy-{{ level }}" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+    </li>
+{% endif %}
+{%- endmacro %}
+{% macro toc_navigation(toc, level=1) -%}
+{% if toc.children %}
+    <li class="nav-toc nav-toc-{{ level }} has-children">
+        <a class="nav-toc nav-toc-{{ level }}" href="#{{ toc.attr_id }}">{{ toc.title }}</a>
+        <menu class="nav-toc nav-toc-{{ level + 1}}">
+            {% for child in toc.children %}
+            {{ toc_navigation(child, level + 1) }}
+            {% endfor %}
+        </menu>
+    </li>
+{% else %}
+    <li class="nav-toc nav-toc-{{ level }}">
+        <a class="nav-toc nav-toc-{{ level }}" href="#{{ toc.attr_id }}">{{ toc.title }}</a>
+    </li>
+{% endif %}
+{%- endmacro %}
+<!DOCTYPE html>
+<html>
+    <head>
+{% block head %}
+        <meta charset = "UTF-8">
+{% block head_fonts %}
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+{% endblock head_fonts %}
+{% block head_styles %}
+        <link rel="stylesheet" href="{{ 'static/styles/screen.css'|relative_link }}" integrity="{{ 'static/styles/screen.css'|subresource_integrity }}"/>
+{% endblock head_styles %}
+{% block head_scripts %}
+        <script src="{{ 'static/scripts/scroll.js'|relative_link }}" integrity="{{ 'static/scripts/scroll.js'|subresource_integrity }}"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
+{% endblock head_scripts %}
+        <title>{% block head_title %}{{ this.variables.title }}{% endblock head_title %}</title>
+{% endblock head %}
+    </head>
+    <body data-scroll-y="0">
+{% block body %}
+        <header>
+            <figure class="logotype">
+                <a class="logotype" href="{{ '.'|relative_link }}">
+                    <img class="logotype" src="{{ 'static/images/logotype.svg'|relative_link }}" alt="logotype" />
+                </a>
+            </figure>
+            <nav class="nav-components">
+{% block header_nav %}
+<menu class="nav-components nav-components-0">
+{% for template in hierarchy %}
+{% if template.version_mutations|length > 0 %}
+<li class="nav-components nav-components-0 has-children">
+<a class="nav-components nav-components-0" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+<menu class="nav-components nav-components-1">
+    {% for version, mutation in template.version_mutations|reverse %}
+    <li class="nav-components nav-components-1">
+        <a class="nav-components nav-components-1" href="{{ mutation.output_link|relative_link }}">{{ mutation.variables.title }}</a>
+    </li>
+    {% endfor%}
+</menu>
+</li>
+{% else %}
+<li class="nav-components nav-components-0">
+<a class="nav-components nav-components-0" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+</li>
+{% endif %}
+{% endfor%}
+</menu>
+{% endblock header_nav %}
+            </nav>
+            <nav class="nav-toc">
+                <menu class="nav-toc nav-toc-0">
+                    <li class="nav-toc nav-toc-0">
+                        <a class="nav-toc nav-toc-0" href="#">{{ 'Contents' }}</a>
+                        <menu class="nav-toc nav-toc-1">
+                            {% for toc in this.toc %}
+                            {{ toc_navigation(toc) }}
+                            {% endfor%}
+                        </menu>
+                    </li>
+                </menu>
+            </nav>
+        </header>
+        <aside class="nav-hierarchy">
+            <nav class="nav-hierarchy">
+                <menu class="nav-hierarchy nav-hierarchy-0">
+{% block main_nav %}
+{% for template in hierarchy %}
+{% if (template in this.ancestors) or (template.output_path == this.output_path) %}
+{{ hierarchy_navigation(template) }}
+{% endif %}
+{% endfor%}
+{% endblock main_nav %}
+                </menu>
+            </nav>
+        </aside>
+        <main>
+            <section>
+                <article class="nav-relations">
+                    <h1>{{ this.variables.title }}</h1>
+                    <nav class="nav-versions">
+                        <menu class="nav-versions">
+                            {% for version, mutation in this.version_mutations %}
+                            <li class="nav-versions">
+                                <a class="nav-versions" href="{{ mutation.output_link|relative_link }}">{{ version.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </menu>
+                    </nav>
+                    <nav class="nav-cultures">
+                        <menu class="nav-cultures">
+                            {% for culture, mutation in this.culture_mutations %}
+                            <li class="nav-cultures">
+                                <a class="nav-cultures" href="{{ mutation.output_link|relative_link }}">{{ culture.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </menu>
+                    </nav>
+                    <p>{% block article_foreword %}{% endblock article_foreword %}</p>
+                </article>
+                <aside>
+                </aside>
+            </section>
+{% block content %}
+{% endblock content %}
+        </main>
+{% endblock body %}
+        <footer>
+        </footer>
+    </body>
+</html>

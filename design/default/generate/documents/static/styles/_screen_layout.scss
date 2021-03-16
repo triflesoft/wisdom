@@ -1,0 +1,153 @@
+@use 'config';
+
+html {
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    font-family: config.$body__font_family;
+    font-weight: config.$body__font_weight;
+    font-size: config.$body__font_size;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto 3rem;
+    background-color: config.$aside__background_color;
+    font-family: config.$body__font_family;
+    font-weight: config.$body__font_weight;
+    font-size: config.$body__font_size;
+
+    > header {
+        grid-column-start: 1;
+        grid-column-end: span 1;
+        grid-row-start: 1;
+        grid-row-end: span 1;
+    }
+
+    > aside {
+        grid-column-start: 1;
+        grid-column-end: span 1;
+        grid-row-start: 2;
+        grid-row-end: span 1;
+    }
+
+    > main {
+        grid-column-start: 1;
+        grid-column-end: span 1;
+        grid-row-start: 3;
+        grid-row-end: span 1;
+    }
+
+    > footer {
+        grid-column-start: 1;
+        grid-column-end: span 1;
+        grid-row-start: 4;
+        grid-row-end: span 1;
+    }
+}
+
+@media only screen and (min-width: config.$body__responsive_threshold) {
+    body {
+        grid-template-columns: minmax(auto, 20rem) auto;
+        grid-template-rows: auto auto auto 3rem;
+
+        > header {
+            grid-column-start: 1;
+            grid-column-end: span 2;
+            grid-row-start: 1;
+            grid-row-end: span 1;
+
+        }
+
+        > aside {
+            grid-column-start: 1;
+            grid-column-end: span 1;
+            grid-row-start: 2;
+            grid-row-end: span 1;
+        }
+
+        > main {
+            grid-column-start: 2;
+            grid-column-end: span 1;
+            grid-row-start: 2;
+            grid-row-end: span 2;
+        }
+
+        > footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 1;
+            grid-column-start: 1;
+            grid-column-end: span 2;
+            grid-row-start: 4;
+            grid-row-end: span 1;
+        }
+    }
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+code, kbd, pre, samp {
+    font-family: config.$common__code__font_family;
+    font-weight: config.$common__code__font_weight;
+    font-size:   config.$common__code__font_size;
+}
+
+h1 {
+    font-family: config.$common__hx__font_family;
+    font-weight: config.$common__hx__font_weight;
+    font-size:   config.$common__h1__font_size;
+    margin:     (config.$common__h1__font_size / 6) 0 (config.$common__h1__font_size / 2) 0;
+}
+
+h2 {
+    font-family: config.$common__hx__font_family;
+    font-weight: config.$common__hx__font_weight;
+    font-size:   config.$common__h2__font_size;
+    margin:     (config.$common__h2__font_size / 2) 0;
+}
+
+h3 {
+    font-family: config.$common__hx__font_family;
+    font-weight: config.$common__hx__font_weight;
+    font-size:   config.$common__h3__font_size;
+    margin:     (config.$common__h3__font_size / 2) 0;
+}
+
+h4 {
+    font-family: config.$common__hx__font_family;
+    font-weight: config.$common__hx__font_weight;
+    font-size:   config.$common__h4__font_size;
+    margin:     (config.$common__h4__font_size / 2) 0;
+}
+
+h5 {
+    font-family: config.$common__hx__font_family;
+    font-weight: config.$common__hx__font_weight;
+    font-size:   config.$common__h5__font_size;
+    margin:     (config.$common__h5__font_size / 2) 0;
+}
+
+h6 {
+    font-family: config.$common__hx__font_family;
+    font-weight: config.$common__hx__font_weight;
+    font-size:   config.$common__h6__font_size;
+    margin:     (config.$common__h6__font_size / 2) 0;
+}
+
+ul {
+    margin: 0 0 0 1rem;
+}
+
+a {
+    color: config.$common__a__color;
+
+    &:hover {
+        color:  config.$common__a__color__hover;
+    }
+}
