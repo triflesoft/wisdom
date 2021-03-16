@@ -9,7 +9,7 @@ def discover_relative_link(resource_link):
 
 @contextfilter
 def generate_relative_link(context, resource_link):
-    template_output_link = context['this'].output_link
-    relative_link = relpath(resource_link, dirname(template_output_link))
+    this_output_link = context['this'].output_link
+    relative_link = relpath(resource_link, dirname(this_output_link))
 
     return '' if relative_link == '.' else relative_link

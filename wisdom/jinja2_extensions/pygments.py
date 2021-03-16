@@ -28,4 +28,4 @@ class PygmentsGenerateExtension(generate_extension('PygmentsGenerateExtensionBas
         code_html_lines = code_html.splitlines()
         code_html = '</li><li>'.join(code_html_lines)
 
-        return f'''<code class="pygments"><button class="copy"></button><pre><ol><li>{code_html}</li></ol></pre></code>'''
+        return f'<code class="pygments"><button class="copy"></button><pre><ol><li>{code_html}</li></ol></pre></code>'
