@@ -15,8 +15,8 @@ class AdmonitionGenerateExtension(generate_extension('AdmonitionGenerateExtensio
         text = str(caller())
 
         return f'''
-<div class="admonition admonition-{kind}">
-    <div class="admonition-content admonition-content-{kind}">
+<div class="admonition-outer admonition-outer-{kind}">
+    <div class="admonition-inner admonition-inner-{kind}">
         <figure class="admonition admonition-{kind}">
             <img class="admonition admonition-{kind}" src="{icon_link}" />
         </figure>
