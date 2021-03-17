@@ -1,11 +1,19 @@
-from .base import discover_extension
-from .base import generate_extension
-
+from os.path import dirname
+from os.path import relpath
 from pygments import highlight
 from pygments.lexers import guess_lexer
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 from pygments.styles import get_style_by_name
+from re import compile
+from urllib.parse import quote
+
+from .base import discover_extension
+from .base import generate_extension
+
+
+CIRCLED_TEXT = compile('[\u2776\u2777\u2778\u2779\u277A\u277B\u277C\u277D\u277E\u277F]')
+CIRCLED_HTML = compile('<span style="[^"]+">([\u2776\u2777\u2778\u2779\u277A\u277B\u277C\u277D\u277E\u277F])</span>')
 
 
 PygmentsDiscoverExtension = discover_extension('PygmentsDiscoverExtension', 'pygments')
@@ -25,7 +33,17 @@ class PygmentsGenerateExtension(generate_extension('PygmentsGenerateExtensionBas
         code_style = get_style_by_name(code_style)
         code_formatter = HtmlFormatter(style=code_style, nowrap=True, noclasses=True)
         code_html = highlight(code_text, code_lexer, code_formatter)
+        code_html = CIRCLED_HTML.sub('\\1', code_html)
         code_html_lines = code_html.splitlines()
         code_html = '</li><li>'.join(code_html_lines)
+        code_text = CIRCLED_TEXT.sub('', code_text)
+        this_output_link = context['this'].output_link
+        icon_link = relpath('static/images/icon-source-code-copy.svg', dirname(this_output_link))
 
-        return f'<code class="pygments"><button class="pygments-copy"></button><pre class="pygments"><ol><li>{code_html}</li></ol></pre></code>'
+        return f'''
+<code class="source-code-outer source-code-pygments">
+    <button class="original-code-copy" data-original-code="{quote(code_text)}">
+        <img class="original-code-copy" src="{icon_link}" alt="" />
+    </button>
+    <pre class="source-code-inner"><ol><li>{code_html}</li></ol></pre>
+</code>'''

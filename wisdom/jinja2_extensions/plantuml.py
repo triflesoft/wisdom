@@ -7,6 +7,7 @@ from os.path import isfile
 from os.path import join
 from os.path import relpath
 from subprocess import run
+from urllib.parse import quote
 
 from .base import discover_extension
 from .base import generate_extension
@@ -45,4 +46,14 @@ class PlantUmlGenerateExtension(generate_extension('PlantUmlGenerateExtensionBas
             with open(local_path, 'wb') as image_file:
                 image_file.write(result.stdout)
 
-        return f'<figure class="illustration illustration-plantuml"><img class="illustration illustration-plantuml" src="{image_link}" alt="{description}" /><figcaption class="illustration illustration-plantuml">{description}</figcaption></figure>'
+        this_output_link = context['this'].output_link
+        icon_link = relpath('static/images/icon-figure-code-copy.svg', dirname(this_output_link))
+
+        return f'''
+<figure class="illustration-outer illustration-plantuml">
+    <button class="original-code-copy" data-original-code="{quote(diagram_markup_text)}">
+        <img class="original-code-copy" src="{icon_link}" alt="" />
+    </button>
+    <img class="illustration-inner" src="{image_link}" alt="{description}" />
+    <figcaption class="illustration-inner">{description}</figcaption>
+</figure>'''
