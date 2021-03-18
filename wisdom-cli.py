@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 
+from jinja2.exceptions import TemplateSyntaxError
+from logging import error
 from logging import info
 from logging.config import dictConfig
 from os.path import join
 from sys import argv
 from time import perf_counter_ns
 from time import sleep
+from traceback import format_exc
 
 from wisdom.arguments import Arguments
 from wisdom.configuration import Configuration
@@ -15,19 +18,11 @@ from wisdom.output import Output
 
 def process(arguments):
     configuration = Configuration(arguments)
-    time_nano_from = perf_counter_ns()
     source = Source(arguments, configuration)
     source.discover()
     output = Output(arguments, configuration, source)
     output.generate_static()
     output.generate_jinja2()
-    time_nano_till = perf_counter_ns()
-    span_nano = time_nano_till - time_nano_from
-    span_micro = span_nano // 1000
-    span_milli = span_micro // 1000
-    total_full = span_milli // 1000
-    total_milli = span_milli % 1000
-    info(f'{total_full} seconds {total_milli} milliseconds elapsed.')
 
 
 def main():
@@ -69,10 +64,20 @@ def main():
         inotify = InotifyTree(arguments.watch_path, IN_CLOSE_WRITE, 24*60*60)
 
         while True:
+            time_nano_from = perf_counter_ns()
+
             try:
                 process(arguments)
-            except RuntimeError:
-                pass
+            except Exception:
+                error(format_exc())
+
+            time_nano_till = perf_counter_ns()
+            span_nano = time_nano_till - time_nano_from
+            span_micro = span_nano // 1000
+            span_milli = span_micro // 1000
+            total_full = span_milli // 1000
+            total_milli = span_milli % 1000
+            info(f'{total_full} seconds {total_milli} milliseconds elapsed.')
 
             for e in inotify.event_gen():
                 if e:
@@ -84,10 +89,7 @@ def main():
             sleep(0.1)
 
     else:
-        try:
-            process(arguments)
-        except RuntimeError:
-            exit(1)
+        process(arguments)
 
 if __name__ == '__main__':
     main()
