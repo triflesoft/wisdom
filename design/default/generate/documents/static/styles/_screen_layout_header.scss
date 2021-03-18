@@ -6,8 +6,6 @@ body {
         box-shadow: 0 0 1.5rem config.$header__box_shadow_color;
 
         > figure.logotype {
-            height: #{config.$layout__header_logotype_height}rem;
-
             a.logotype > {
                 img.logotype {
                     width:  #{config.$layout__header_logotype_width}rem;
@@ -48,7 +46,7 @@ body {
                         position: absolute;
                         visibility: hidden;
                         opacity: 0;
-                        background-color: config.$header__menu__background_color__hover;
+                        background-image: linear-gradient(config.$header__menu__background_color__hover1, config.$header__menu__background_color__hover2);
 
                         > li.nav-components.nav-components-1 {
                             display: block;
@@ -87,7 +85,7 @@ body {
                         visibility: hidden;
                         opacity: 0;
                         margin: 0;
-                        background-color: config.$header__menu__background_color__hover;
+                        background-image: linear-gradient(config.$header__menu__background_color__hover1, config.$header__menu__background_color__hover2);
 
                         > li.nav-toc.nav-toc-1 {
                             font-size: config.$header__menu__toc1__font_size;
@@ -141,7 +139,9 @@ body {
             display: grid;
             grid-template-columns:
                 #{config.$layout__lside_width}rem
-                #{config.$layout__header_logotype_width}rem
+                #{config.$layout__header_logotype_margin}rem
+                #{2*config.$layout__header_logotype_width}rem
+                #{config.$layout__header_logotype_margin}rem
                 max-content
                 1fr
                 #{config.$layout__header_toc_width}rem
@@ -155,40 +155,57 @@ body {
 
             &[data-is-large="yes"] {
                 height: #{config.$layout__header_height_max}rem;
+
+                > figure.logotype {
+                    a.logotype > {
+                        img.logotype {
+                            width:  #{2*config.$layout__header_logotype_width}rem;
+                            height: #{2*config.$layout__header_logotype_height}rem;
+                            margin: 0;
+                        }
+                    }
+                }
             }
 
             > figure.logotype {
-                grid-column-start: 2;
-                grid-column-end: span 1;
-                grid-row-start: 2;
-                grid-row-end: span 1;
-            }
-
-            > nav.nav-components {
-                display: block;
                 grid-column-start: 3;
                 grid-column-end: span 1;
                 grid-row-start: 2;
                 grid-row-end: span 1;
 
+                a.logotype > {
+                    img.logotype {
+                        width:  #{config.$layout__header_logotype_width}rem;
+                        height: #{config.$layout__header_logotype_height}rem;
+                        margin: 0 #{config.$layout__header_logotype_height / 2}rem;
+                        transition: margin 0.5s, width 0.5s, height 0.5s;
+                    }
+                }
+            }
+
+            > nav.nav-components {
+                grid-column-start: 5;
+                grid-column-end: span 1;
+                grid-row-start: 2;
+                grid-row-end: span 1;
+                margin: auto 0;
+
                 > menu.nav-components.nav-components-0 {
                     > li.nav-components.nav-components-0 {
+                        &:hover {
+                            background-color: config.$header__menu__background_color__hover1;
+                        }
+
                         &.has-children:hover {
                             position: relative;
-                            background-color: config.$header__menu__background_color__hover;
 
                             > menu.nav-components.nav-components-1 {
                                 visibility: visible;
                                 opacity: 1;
                                 top: 100%;
                                 width: 100%;
-                                background-color: config.$header__menu__background_color__hover;
                                 transition: opacity 0.5s;
                             }
-                        }
-
-                        &:not(.has-children):hover {
-                            background-color: config.$header__menu__background_color__hover;
                         }
                     }
                 }
@@ -196,10 +213,11 @@ body {
 
             > nav.nav-toc {
                 display: block;
-                grid-column-start: 5;
+                grid-column-start: 7;
                 grid-column-end: span 1;
                 grid-row-start: 2;
                 grid-row-end: span 1;
+                margin: auto 0;
 
                 > menu.nav-toc.nav-toc-0 {
                     > li.nav-toc.nav-toc-0 {
@@ -209,7 +227,7 @@ body {
 
                         &:hover {
                             position: relative;
-                            background-color: config.$header__menu__background_color__hover;
+                            background-color: config.$header__menu__background_color__hover1;
 
                             > menu.nav-toc.nav-toc-1 {
                                 visibility: visible;
@@ -217,7 +235,6 @@ body {
                                 z-index: 11;
                                 top: 100%;
                                 width: 100%;
-                                background-color: config.$header__menu__background_color__hover;
                                 transition: opacity 0.5s;
                             }
                         }

@@ -111,6 +111,7 @@ $layout__header_height:          4;
 $layout__header_height_max:     10;
 $layout__header_logotype_height: 3;
 $layout__header_logotype_width:  3;
+$layout__header_logotype_margin: 1;
 $layout__header_toc_width:      20;
 $layout__footer_height:          4;
 $layout__lside_width:           20;
@@ -124,7 +125,9 @@ $body__responsive_threshold: 1024px;
 
 $header__background_color: $color-white-2;
 $header__box_shadow_color: $color-gray-1;
-$header__menu__background_color__hover: $color-gray-1;
+$header__menu__background_color__hover1: $color-gray-1;
+$header__menu__background_color__hover2: $color-gray-2;
+$header__menu__border_color__hover: $color-gray-2;
 $header__menu__font_family: 'Roboto', sans-serif;
 $header__menu__font_weight: 300;
 $header__menu__component0__font_size: 1.4rem;
