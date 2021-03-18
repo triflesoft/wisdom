@@ -119,7 +119,7 @@ body {
 }
 
 @media only screen and (min-width: config.$body__responsive_threshold) {
-    body {
+    body[data-has-rside="yes"] {
         > main {
             > section {
                 grid-template-columns: 1fr #{config.$layout__rside_width}rem;
@@ -136,6 +136,25 @@ body {
                     grid-column-end: span 1;
                     grid-row-start: 1;
                     grid-row-end: span 1;
+                }
+            }
+        }
+    }
+
+    body[data-has-rside="no"] {
+        > main {
+            > section {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+
+                > article {
+                    grid-column-start: 1;
+                    grid-column-end: span 1;
+                    grid-row-start: 1;
+                    grid-row-end: span 1;
+                }
+                > aside {
+                    display: none;
                 }
             }
         }
