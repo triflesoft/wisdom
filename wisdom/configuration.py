@@ -25,10 +25,11 @@ class Version:
 
 
 class Culture:
-    def __init__(self, index: int, code: str, name: str):
+    def __init__(self, index: int, code: str, name: str, translations: dict):
         self.index = index
         self.code = code
         self.name = name
+        self.translations = translations
 
     def __repr__(self):
         return f'Culture(code="{self.code}", name="{self.name}")'
@@ -112,7 +113,7 @@ class Configuration:
             self.versions[version.code] = version
 
         for index, (code, config) in enumerate(configuration['cultures'].items()):
-            culture = Culture(index, code, config['name'])
+            culture = Culture(index, code, config['name'], config.get('translations', {}))
             self.cultures[culture.code] = culture
 
         for index, (code, config) in enumerate(configuration['components'].items()):
