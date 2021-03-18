@@ -118,7 +118,7 @@ body {
     body {
         > aside.nav-hierarchy {
             position: sticky;
-            top: 4rem;
+            top: #{config.$layout__header_height}rem;
         }
     }
 }

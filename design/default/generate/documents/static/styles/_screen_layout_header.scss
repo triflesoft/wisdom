@@ -3,15 +3,15 @@
 body {
     > header {
         background-color: config.$header__background_color;
-        box-shadow: 0 0 0.5rem config.$header__box_shadow_color;
+        box-shadow: 0 0 1.5rem config.$header__box_shadow_color;
 
         > figure.logotype {
-            height: 6rem;
+            height: #{config.$layout__header_logotype_height}rem;
 
             a.logotype > {
                 img.logotype {
-                    width: 6rem;
-                    height: 6rem;
+                    width:  #{config.$layout__header_logotype_width}rem;
+                    height: #{config.$layout__header_logotype_height}rem;
                 }
             }
         }
@@ -32,6 +32,8 @@ body {
             }
 
             > menu.nav-components.nav-components-0 {
+                margin: auto 0;
+
                 > li.nav-components.nav-components-0 {
                     display: inline-block;
                     font-family: config.$header__menu__font_family;
@@ -73,6 +75,8 @@ body {
             }
 
             > menu.nav-toc.nav-toc-0 {
+                margin: auto 0;
+
                 > li.nav-toc.nav-toc-0 {
                     font-family: config.$header__menu__font_family;
                     font-weight: config.$header__menu__font_weight;
@@ -133,45 +137,39 @@ body {
 
 @media only screen and (min-width: config.$body__responsive_threshold) {
     body {
-        &[data-scroll-y="0"] { > header { height: 10rem; } }
-        &[data-scroll-y="1"] { > header { height: 9rem; } }
-        &[data-scroll-y="2"] { > header { height: 8rem; } }
-        &[data-scroll-y="3"] { > header { height: 7rem; } }
-        &[data-scroll-y="4"] { > header { height: 6rem; } }
-        &[data-scroll-y="5"] { > header { height: 5rem; } }
-
         > header {
             display: grid;
-            grid-template-columns: 20rem 1rem 3rem 1rem max-content 1fr 20rem 20rem;
+            grid-template-columns:
+                #{config.$layout__lside_width}rem
+                #{config.$layout__header_logotype_width}rem
+                max-content
+                1fr
+                #{config.$layout__header_toc_width}rem
+                #{config.$layout__rside_width}rem;
             grid-template-rows: 1fr auto 1fr;
             position: sticky;
             top: 0;
             z-index: 10;
-            height: 4rem;
-            transition: height 0.1s;
+            height: #{config.$layout__header_height}rem;
+            transition: height 0.5s;
+
+            &[data-is-large="yes"] {
+                height: #{config.$layout__header_height_max}rem;
+            }
 
             > figure.logotype {
-                grid-column-start: 3;
+                grid-column-start: 2;
                 grid-column-end: span 1;
                 grid-row-start: 2;
                 grid-row-end: span 1;
-                height: 3rem;
-
-                a.logotype > {
-                    img.logotype {
-                        width: 3rem;
-                        height: 3rem;
-                    }
-                }
             }
 
             > nav.nav-components {
                 display: block;
-                grid-column-start: 5;
+                grid-column-start: 3;
                 grid-column-end: span 1;
                 grid-row-start: 2;
                 grid-row-end: span 1;
-                height: 3rem;
 
                 > menu.nav-components.nav-components-0 {
                     > li.nav-components.nav-components-0 {
@@ -198,7 +196,7 @@ body {
 
             > nav.nav-toc {
                 display: block;
-                grid-column-start: 7;
+                grid-column-start: 5;
                 grid-column-end: span 1;
                 grid-row-start: 2;
                 grid-row-end: span 1;
@@ -206,7 +204,6 @@ body {
                 > menu.nav-toc.nav-toc-0 {
                     > li.nav-toc.nav-toc-0 {
                         > a.nav-toc.nav-toc-0 {
-                            width: 17rem;
                             text-align: right;
                         }
 

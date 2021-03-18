@@ -107,6 +107,16 @@ $common__code__font_family: 'Source Code Pro', monospace;
 $common__code__font_weight: 400;
 $common__code__font_size: 1rem;
 
+$layout__header_height:          4;
+$layout__header_height_max:     10;
+$layout__header_logotype_height: 3;
+$layout__header_logotype_width:  3;
+$layout__header_toc_width:      20;
+$layout__footer_height:          4;
+$layout__lside_width:           20;
+$layout__rside_width:           30;
+
+
 $body__font_family: 'Open Sans', sans-serif;
 $body__font_weight: 400;
 $body__font_size: 12pt;
@@ -153,11 +163,8 @@ $main__background_color: $color-white-1;
 $main__article__mutation_separator___color: $color-blue-9;
 $main__article__menu__font_family: 'Roboto', sans-serif;
 $main__article__menu__font_weight: 300;
-$main__article__admonition_note__background_color: $color-blue-1;
-$main__article__admonition_tip__background_color: $color-green-1;
-$main__article__admonition_warning__background_color: $color-red-1;
-$main__article__admonition_caution__background_color: $color-orange-1;
-$main__aside__background_color: $color-white-2;
+$main__aside__background_color: $color-purple-9;
+$main__aside__color: $color-white-2;
 
 $footer__background_color: $color-white-2;
 $footer__box_shadow_color: $color-gray-1;

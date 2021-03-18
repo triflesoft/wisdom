@@ -23,15 +23,15 @@ code.source-code-outer {
     > pre.source-code-inner {
         display: block;
         padding: 1rem 1rem 1rem 3rem;
-        border: config.$common__border_width solid config.$color-gray-9;
-        max-width: calc(100vw - 43rem);
+        border: config.$common__border_width solid config.$color-gray-3;
+        max-width: calc(100vw - #{config.$layout__lside_width + config.$layout__rside_width + 3}rem);
         white-space: pre-wrap;
         word-wrap: break-word;
 
         > ol {
             > li {
                 &::marker {
-                    color: config.$color-gray-5;
+                    color: config.$color-gray-3;
                 }
 
                 &:hover {
@@ -67,7 +67,7 @@ figure.illustration-outer {
 
     > img.illustration-inner {
         padding: 1rem 1rem 1rem 1rem;
-        border: config.$common__border_width solid config.$color-gray-9;
+        border: config.$common__border_width solid config.$color-gray-3;
     }
 
     > figcaption.illustration-inner {
@@ -108,21 +108,21 @@ div.admonition-outer {
     }
 }
 
-@mixin admonition-specific($kind, $color1, $color2) {
+@mixin admonition-specific($kind, $color-background, $color-border, $color-icon) {
     div.admonition-outer-#{$kind} {
-        background-color: #{$color1};
+        background-color: #{$color-background};
 
         > div.admonition-inner-#{$kind} {
-            border: 0.1rem solid #{$color2};
+            border: config.$common__border_width solid #{$color-border};
 
             > figure.admonition-#{$kind} {
-                background-color: #{$color2};
+                background-color: #{$color-icon};
             }
         }
     }
 }
 
-@include admonition-specific(note,    config.$color-blue-1,   config.$color-blue-9);
-@include admonition-specific(tip,     config.$color-green-1,  config.$color-green-9);
-@include admonition-specific(warning, config.$color-red-1,    config.$color-red-9);
-@include admonition-specific(caution, config.$color-orange-1, config.$color-orange-9);
+@include admonition-specific(note,    config.$color-blue-1,   config.$color-blue-3,   config.$color-blue-9);
+@include admonition-specific(tip,     config.$color-green-1,  config.$color-green-3,  config.$color-green-9);
+@include admonition-specific(warning, config.$color-red-1,    config.$color-red-3,    config.$color-red-9);
+@include admonition-specific(caution, config.$color-orange-1, config.$color-orange-3, config.$color-orange-9);
