@@ -25,6 +25,9 @@ body {
                         display: block;
                         position: relative;
                         padding: 0.5rem 1rem;
+                        letter-spacing: 0.1rem;
+                        text-transform: uppercase;
+                        white-space: nowrap;
                     }
                 }
             }
@@ -36,10 +39,11 @@ body {
                     display: inline-block;
                     font-family: config.$header__menu__font_family;
                     font-weight: config.$header__menu__font_weight;
+                    font-size: config.$header__menu__component0__font_size;
 
 
                     > a.nav-components.nav-components-0 {
-                        font-size: config.$header__menu__component0__font_size;
+
                     }
 
                     > menu.nav-components.nav-components-1 {
@@ -49,6 +53,7 @@ body {
                         background-image: linear-gradient(config.$header__menu__background_color__hover1, config.$header__menu__background_color__hover2);
 
                         > li.nav-components.nav-components-1 {
+                            font-size: config.$header__menu__component1__font_size;
                             display: block;
                         }
                     }
@@ -68,6 +73,9 @@ body {
                         display: block;
                         position: relative;
                         padding: 0.5rem 1rem;
+                        letter-spacing: 0.1rem;
+                        text-transform: uppercase;
+                        white-space: nowrap;
                     }
                 }
             }
@@ -144,14 +152,14 @@ body {
                 #{config.$layout__header_logotype_margin}rem
                 max-content
                 1fr
-                #{config.$layout__header_toc_width}rem
+                auto
                 #{config.$layout__rside_width}rem;
             grid-template-rows: 1fr auto 1fr;
             position: sticky;
             top: 0;
             z-index: 10;
             height: #{config.$layout__header_height}rem;
-            transition: height 0.5s;
+            transition: height 0.6s;
 
             &[data-is-large="yes"] {
                 height: #{config.$layout__header_height_max}rem;
@@ -178,7 +186,7 @@ body {
                         width:  #{config.$layout__header_logotype_width}rem;
                         height: #{config.$layout__header_logotype_height}rem;
                         margin: 0 #{config.$layout__header_logotype_height / 2}rem;
-                        transition: margin 0.5s, width 0.5s, height 0.5s;
+                        transition: margin 0.4s, width 0.4s, height 0.4s;
                     }
                 }
             }
@@ -200,11 +208,18 @@ body {
                             position: relative;
 
                             > menu.nav-components.nav-components-1 {
+                                left: 0;
                                 visibility: visible;
                                 opacity: 1;
                                 top: 100%;
-                                width: 100%;
+                                min-width: 100%;
                                 transition: opacity 0.5s;
+                            }
+                        }
+
+                        &.selected {
+                            > a.nav-components.nav-components-0 {
+                                font-weight: 700;
                             }
                         }
                     }
@@ -221,22 +236,29 @@ body {
 
                 > menu.nav-toc.nav-toc-0 {
                     > li.nav-toc.nav-toc-0 {
-                        > a.nav-toc.nav-toc-0 {
-                            text-align: right;
-                        }
-
                         &:hover {
                             position: relative;
                             background-color: config.$header__menu__background_color__hover1;
 
                             > menu.nav-toc.nav-toc-1 {
+                                right: 0;
                                 visibility: visible;
                                 opacity: 1;
                                 z-index: 11;
                                 top: 100%;
-                                width: 100%;
+                                min-width: 100%;
                                 transition: opacity 0.5s;
                             }
+                        }
+
+                        &.selected {
+                            > a.nav-toc.nav-toc-0 {
+                                font-weight: 700;
+                            }
+                        }
+
+                        > a.nav-toc.nav-toc-0 {
+                            text-align: right;
                         }
                     }
                 }

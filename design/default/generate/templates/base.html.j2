@@ -49,7 +49,7 @@
         <title>{%- block head_title -%}{{ this.variables.title }}{%- endblock head_title -%}</title>
 {%- endblock head -%}
     </head>
-    <body data-scroll-y="0" data-has-lside="{%- if this.variables.lside|default(true) -%}yes{%- else -%}no{%- endif -%}" data-has-rside="{%- if this.variables.rside|default(true) -%}yes{%- else -%}no{%- endif -%}" >
+    <body data-scroll-y="0" data-is-large="yes" data-has-lside="{%- if this.variables.lside|default(true) -%}yes{%- else -%}no{%- endif -%}" data-has-rside="{%- if this.variables.rside|default(true) -%}yes{%- else -%}no{%- endif -%}" >
 {%- block body -%}
         <header>
             <figure class="logotype">
@@ -62,18 +62,18 @@
 <menu class="nav-components nav-components-0">
 {%- for template in hierarchy -%}
 {%- if template.version_mutations|length > 0 -%}
-<li class="nav-components nav-components-0 has-children">
+<li class="nav-components nav-components-0 has-children {%- if (template in this.ancestors) or (template.output_path == this.output_path) %} selected{% endif -%}">
 <a class="nav-components nav-components-0" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
 <menu class="nav-components nav-components-1">
     {%- for version, mutation in template.version_mutations|reverse -%}
     <li class="nav-components nav-components-1">
-        <a class="nav-components nav-components-1" href="{{ mutation.output_link|relative_link }}">{{ mutation.variables.title }}</a>
+        <a class="nav-components nav-components-1" href="{{ mutation.output_link|relative_link }}">{{ mutation.variables.title }}, {{ version.name }}</a>
     </li>
     {%- endfor-%}
 </menu>
 </li>
 {%- else -%}
-<li class="nav-components nav-components-0">
+<li class="nav-components nav-components-0{%- if (template in this.ancestors) or (template.output_path == this.output_path) %} selected{% endif -%}">
 <a class="nav-components nav-components-0" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
 </li>
 {%- endif -%}
@@ -84,7 +84,7 @@
             <nav class="nav-toc">
                 <menu class="nav-toc nav-toc-0">
                     <li class="nav-toc nav-toc-0">
-                        <a class="nav-toc nav-toc-0" href="#">{{ 'Contents' }}</a>
+                        <a class="nav-toc nav-toc-0" href="#">{{ culture.translations.contents }}</a>
                         <menu class="nav-toc nav-toc-1">
                             {%- for toc in this.toc -%}
                             {{ toc_navigation(toc) }}
