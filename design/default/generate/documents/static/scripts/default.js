@@ -34,7 +34,7 @@
         copyTextToClipboard(decodeURIComponent(buttonElement.dataset.originalCode));
     }
 
-    function findOriginalCodeCopyButtons() {
+    function configureOriginalCodeCopyButtons() {
         let buttonElements = document.querySelectorAll('button.original-code-copy')
 
         buttonElements.forEach(
@@ -46,21 +46,44 @@
     /* END:   ORIGINAL CODE COPY */
 
     /* BEGIN: HEADER RESIZE ON DOCUMENT SCROLL */
-    function windowScrollYInRem() {
-        let pixelsPerRem = parseFloat(getComputedStyle(document.documentElement).fontSize)
+    let headerElement = null;
+    let headerTimer = null;
+    let headerResizeThresholdSmall = 1;
+    let headerResizeThresholdLarge = 1;
 
-        return Math.round(window.scrollY / pixelsPerRem);
+    function onDocumentScrollTimer(windowScrollY) {
+        headerTimer = null;
+
+        if (windowScrollY > headerResizeThresholdLarge) {
+            headerElement.dataset.isLarge = "no";
+        } else if (windowScrollY < headerResizeThresholdSmall) {
+            headerElement.dataset.isLarge = "yes";
+        }
     }
 
     function onDocumentScroll(e) {
-        document.body.dataset.scrollY = windowScrollYInRem();
+        if (headerTimer !== null) {
+            clearTimeout(headerTimer);
+        }
+
+        setTimeout(onDocumentScrollTimer, 500, window.scrollY);
+    }
+
+    function configureHeader() {
+        headerElement = document.querySelector('header');
+
+        let headerElementHeight = parseInt(window.getComputedStyle(headerElement).height)
+        headerResizeThresholdSmall = 1 * headerElementHeight;
+        headerResizeThresholdLarge = 5 * headerElementHeight;
+
+        onDocumentScroll(null);
+        document.addEventListener('scroll', onDocumentScroll);
     }
     /* END:   HEADER RESIZE ON DOCUMENT SCROLL */
 
     function onDocumentComplete() {
-        document.body.dataset.scrollY = windowScrollYInRem();
-        document.addEventListener('scroll', onDocumentScroll);
-        findOriginalCodeCopyButtons();
+        configureHeader();
+        configureOriginalCodeCopyButtons();
     }
 
     function onDocumentReadyStateChange(e) {
