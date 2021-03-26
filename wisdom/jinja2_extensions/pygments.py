@@ -1,5 +1,3 @@
-from os.path import dirname
-from os.path import relpath
 from pygments import highlight
 from pygments.lexers import guess_lexer
 from pygments.lexers import get_lexer_by_name
@@ -37,13 +35,11 @@ class PygmentsGenerateExtension(generate_extension('PygmentsGenerateExtensionBas
         code_html_lines = code_html.splitlines()
         code_html = '</li><li>'.join(code_html_lines)
         code_text = CIRCLED_TEXT.sub('', code_text)
-        this_output_link = context['this'].output_link
-        icon_link = relpath('static/images/icon-source-code-copy.svg', dirname(this_output_link))
 
         return f'''
 <code class="source-code-outer source-code-pygments">
     <button class="original-code-copy" data-original-code="{quote(code_text)}">
-        <img class="original-code-copy" src="{icon_link}" alt="" />
+        <img class="original-code-copy" src="static/images/icon-source-code-copy.svg" alt="" />
     </button>
     <pre class="source-code-inner"><ol><li>{code_html}</li></ol></pre>
 </code>'''

@@ -42,6 +42,7 @@ class Template:
         self.source_path = source_path
         self.output_path = output_path
         self.output_link = output_link
+        self.base_link = '/'.join('..' for s in output_link if s == '/')
         self.loader_path = loader_path
         self.timestamp_ns = timestamp_ns
         self.is_changed = is_changed

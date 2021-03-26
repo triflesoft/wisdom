@@ -2,10 +2,8 @@ from jinja2 import contextfilter
 from jinja2 import escape
 from jinja2 import Markup
 from logging import error
-from os.path import dirname
 from os.path import join
 from os.path import normpath
-from os.path import relpath
 from unicodedata import normalize
 
 
@@ -74,7 +72,6 @@ def generate_a_page(context, path):
 
     for template in templates:
         if (template.component.code == component_code) and (template.family == template_family):
-            relative_link = relpath(template.output_link, dirname(this.output_link))
             title = template.variables['title']
             parent = template.parent
 
@@ -82,7 +79,7 @@ def generate_a_page(context, path):
                 title = f'{parent.variables["title"]} / {title}'
                 parent = parent.parent
 
-            return Markup(f'<a class="nav-internal" href="{relative_link}">{escape(title)}</a>')
+            return Markup(f'<a class="nav-internal" href="{template.output_link}">{escape(title)}</a>')
 
     error('Path "%s" cannot be resolved into template.', path)
     raise RuntimeError()

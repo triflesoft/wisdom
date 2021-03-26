@@ -5,7 +5,6 @@ from os import makedirs
 from os.path import dirname
 from os.path import isfile
 from os.path import join
-from os.path import relpath
 from subprocess import run
 from urllib.parse import quote
 
@@ -27,8 +26,7 @@ class GraphvizGenerateExtension(generate_extension('GraphvizGenerateExtensionBas
         graphviz_prefix = context['component'].variables.get('graphviz_output_prefix', 'static/images/graphviz').strip('/')
         graphviz_executable = context['component'].variables.get(f'graphviz_executable_{executable}', executable)
         local_path = join(output_path, graphviz_prefix, image_name)
-        this_output_link = context['this'].output_link
-        image_link = relpath(join(graphviz_prefix, image_name), dirname(this_output_link))
+        image_link = join(graphviz_prefix, image_name)
 
         if not isfile(local_path):
             makedirs(dirname(local_path), exist_ok=True)
@@ -46,13 +44,10 @@ class GraphvizGenerateExtension(generate_extension('GraphvizGenerateExtensionBas
             with open(local_path, 'wb') as image_file:
                 image_file.write(result.stdout)
 
-        this_output_link = context['this'].output_link
-        icon_link = relpath('static/images/icon-figure-code-copy.svg', dirname(this_output_link))
-
         return f'''
 <figure class="illustration-outer illustration-graphviz">
     <button class="original-code-copy" data-original-code="{quote(diagram_markup_text)}">
-        <img class="original-code-copy" src="{icon_link}" alt="" />
+        <img class="original-code-copy" src="static/images/icon-figure-code-copy.svg" alt="" />
     </button>
     <img class="illustration-inner" src="{image_link}" alt="{description}" />
     <figcaption class="illustration-inner">{description}</figcaption>

@@ -1,7 +1,7 @@
 {%- macro hierarchy_navigation(template, level=0) -%}
 {%- if template.children -%}
     <li class="nav-hierarchy nav-hierarchy-{{ level }}{%- if template.output_path == this.output_path %} selected{%- endif %} has-children" data-outline="{{ template.variables.outline|default('') }}">
-        <a class="nav-hierarchy nav-hierarchy-{{ level }}" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+        <a class="nav-hierarchy nav-hierarchy-{{ level }}" href="{{ template.output_link }}">{{ template.variables.title }}</a>
         <menu class="nav-hierarchy nav-hierarchy-{{ level + 1}}">
             {%- for child in template.children -%}
             {{ hierarchy_navigation(child, level + 1) }}
@@ -10,7 +10,7 @@
     </li>
 {%- else -%}
     <li class="nav-hierarchy nav-hierarchy-{{ level }}{%- if template.output_path == this.output_path %} selected{%- endif -%}" data-outline="{{ template.variables.outline|default('') }}">
-        <a class="nav-hierarchy nav-hierarchy-{{ level }}" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+        <a class="nav-hierarchy nav-hierarchy-{{ level }}" href="{{ template.output_link }}">{{ template.variables.title }}</a>
     </li>
 {%- endif -%}
 {%- endmacro -%}
@@ -35,15 +35,16 @@
     <head>
 {%- block head -%}
         <meta charset = "UTF-8">
+        <base href="{{ this.base_link }}" target="_self" />
 {%- block head_fonts -%}
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 {%- endblock head_fonts -%}
 {%- block head_styles -%}
-        <link rel="stylesheet" href="{{ 'static/styles/screen.css'|relative_link }}" integrity="{{ 'static/styles/screen.css'|subresource_integrity }}"/>
+        <link rel="stylesheet" href="{{ 'static/styles/screen.css' }}" integrity="{{ 'static/styles/screen.css'|subresource_integrity }}"/>
 {%- endblock head_styles -%}
 {%- block head_scripts -%}
-        <script src="{{ 'static/scripts/default.js'|relative_link }}" integrity="{{ 'static/scripts/default.js'|subresource_integrity }}"></script>
+        <script src="{{ 'static/scripts/default.js' }}" integrity="{{ 'static/scripts/default.js'|subresource_integrity }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
 {%- endblock head_scripts -%}
         <title>{%- block head_title -%}{{ this.variables.title }}{%- endblock head_title -%}</title>
@@ -53,8 +54,8 @@
 {%- block body -%}
         <header>
             <figure class="logotype">
-                <a class="logotype" href="{{ '.'|relative_link }}">
-                    <img class="logotype" src="{{ 'static/images/logotype.svg'|relative_link }}" alt="logotype" />
+                <a class="logotype" href="{{ '#' }}">
+                    <img class="logotype" src="{{ 'static/images/logotype.svg' }}" alt="logotype" />
                 </a>
             </figure>
             <nav class="nav-components">
@@ -63,18 +64,18 @@
 {%- for template in hierarchy -%}
 {%- if template.version_mutations|length > 0 -%}
 <li class="nav-components nav-components-0 has-children {%- if (template in this.ancestors) or (template.output_path == this.output_path) %} selected{% endif -%}">
-<a class="nav-components nav-components-0" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+<a class="nav-components nav-components-0" href="{{ template.output_link }}">{{ template.variables.title }}</a>
 <menu class="nav-components nav-components-1">
     {%- for version, mutation in template.version_mutations|reverse -%}
     <li class="nav-components nav-components-1">
-        <a class="nav-components nav-components-1" href="{{ mutation.output_link|relative_link }}">{{ mutation.variables.title }}, {{ version.name }}</a>
+        <a class="nav-components nav-components-1" href="{{ mutation.output_link }}">{{ mutation.variables.title }}, {{ version.name }}</a>
     </li>
     {%- endfor-%}
 </menu>
 </li>
 {%- else -%}
 <li class="nav-components nav-components-0{%- if (template in this.ancestors) or (template.output_path == this.output_path) %} selected{% endif -%}">
-<a class="nav-components nav-components-0" href="{{ template.output_link|relative_link }}">{{ template.variables.title }}</a>
+<a class="nav-components nav-components-0" href="{{ template.output_link }}">{{ template.variables.title }}</a>
 </li>
 {%- endif -%}
 {%- endfor-%}
@@ -115,7 +116,7 @@
                         <menu class="nav-versions">
                             {%- for version, mutation in this.version_mutations -%}
                             <li class="nav-versions">
-                                <a class="nav-versions" href="{{ mutation.output_link|relative_link }}">{{ version.name }}</a>
+                                <a class="nav-versions" href="{{ mutation.output_link }}">{{ version.name }}</a>
                             </li>
                             {%- endfor -%}
                         </menu>
@@ -124,7 +125,7 @@
                         <menu class="nav-cultures">
                             {%- for culture, mutation in this.culture_mutations -%}
                             <li class="nav-cultures">
-                                <a class="nav-cultures" href="{{ mutation.output_link|relative_link }}">{{ culture.name }}</a>
+                                <a class="nav-cultures" href="{{ mutation.output_link }}">{{ culture.name }}</a>
                             </li>
                             {%- endfor -%}
                         </menu>

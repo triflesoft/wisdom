@@ -5,7 +5,6 @@ from os import makedirs
 from os.path import dirname
 from os.path import isfile
 from os.path import join
-from os.path import relpath
 from subprocess import run
 from urllib.parse import quote
 
@@ -27,8 +26,7 @@ class PlantUmlGenerateExtension(generate_extension('PlantUmlGenerateExtensionBas
         plantuml_prefix = context['component'].variables.get('plantuml_output_prefix', 'static/images/plantuml').strip('/')
         plantuml_executable = context['component'].variables.get(f'plantuml_jar', 'plantuml.jar')
         local_path = join(output_path, plantuml_prefix, image_name)
-        this_output_link = context['this'].output_link
-        image_link = relpath(join(plantuml_prefix, image_name), dirname(this_output_link))
+        image_link = join(plantuml_prefix, image_name)
 
         if not isfile(local_path):
             makedirs(dirname(local_path), exist_ok=True)
@@ -46,13 +44,10 @@ class PlantUmlGenerateExtension(generate_extension('PlantUmlGenerateExtensionBas
             with open(local_path, 'wb') as image_file:
                 image_file.write(result.stdout)
 
-        this_output_link = context['this'].output_link
-        icon_link = relpath('static/images/icon-figure-code-copy.svg', dirname(this_output_link))
-
         return f'''
 <figure class="illustration-outer illustration-plantuml">
     <button class="original-code-copy" data-original-code="{quote(diagram_markup_text)}">
-        <img class="original-code-copy" src="{icon_link}" alt="" />
+        <img class="original-code-copy" src="static/images/icon-figure-code-copy.svg" alt="" />
     </button>
     <img class="illustration-inner" src="{image_link}" alt="{description}" />
     <figcaption class="illustration-inner">{description}</figcaption>
