@@ -24,7 +24,6 @@ code.source-code-outer {
         display: block;
         padding: 1rem 1rem 1rem 3rem;
         border: config.$common__border_width solid config.$color-gray-3;
-        max-width: calc(100vw - #{config.$layout__lside_width + config.$layout__rside_width + 3}rem);
         white-space: pre-wrap;
         word-wrap: break-word;
 
@@ -126,3 +125,21 @@ div.admonition-outer {
 @include admonition-specific(tip,     config.$color-green-1,  config.$color-green-3,  config.$color-green-9);
 @include admonition-specific(warning, config.$color-red-1,    config.$color-red-3,    config.$color-red-9);
 @include admonition-specific(caution, config.$color-orange-1, config.$color-orange-3, config.$color-orange-9);
+
+td {
+    border: 1px solid black;
+    padding: 0.1rem 0.5rem;
+}
+
+th {
+    border: 1px solid black;
+    padding: 0.1rem 0.5rem;
+}
+
+@media only screen and (min-width: config.$body__responsive_threshold) {
+    code.source-code-outer {
+        > pre.source-code-inner {
+            max-width: calc(100vw - #{config.$layout__lside_width + config.$layout__rside_width + 3}rem);
+        }
+    }
+}

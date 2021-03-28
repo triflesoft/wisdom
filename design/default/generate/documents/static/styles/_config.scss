@@ -123,10 +123,11 @@ $body__font_weight: 400;
 $body__font_size: 12pt;
 $body__responsive_threshold: 1024px;
 
-$header__background_color: $color-white-2;
-$header__box_shadow_color: $color-gray-1;
-$header__menu__background_color__hover1: $color-gray-1;
-$header__menu__background_color__hover2: $color-gray-2;
+$header__background_color: $color-blue-6;
+$header__a__color:         $color-white-2;
+$header__a__color__hover:  $color-white-1;
+$header__menu__background_color__hover1: $color-blue-6;
+$header__menu__background_color__hover2: $color-blue-8;
 $header__menu__border_color__hover: $color-gray-2;
 $header__menu__font_family: 'Roboto', sans-serif;
 $header__menu__font_weight: 300;

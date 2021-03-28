@@ -26,7 +26,7 @@
     </li>
 {%- else -%}
     <li class="nav-toc nav-toc-{{ level }}">
-        <a class="nav-toc nav-toc-{{ level }}" href="#{{ toc.attr_id }}">{{ toc.title }}</a>
+        <a class="nav-toc nav-toc-{{ level }}" href="{{ this.output_link }}#{{ toc.attr_id }}">{{ toc.title }}</a>
     </li>
 {%- endif -%}
 {%- endmacro -%}
@@ -50,15 +50,14 @@
         <title>{%- block head_title -%}{{ this.variables.title }}{%- endblock head_title -%}</title>
 {%- endblock head -%}
     </head>
-    <body data-scroll-y="0" data-is-large="yes" data-has-lside="{%- if this.variables.lside|default(true) -%}yes{%- else -%}no{%- endif -%}" data-has-rside="{%- if this.variables.rside|default(true) -%}yes{%- else -%}no{%- endif -%}" >
+    <body data-has-lside="{%- if this.variables.lside|default(true) -%}yes{%- else -%}no{%- endif -%}" data-has-rside="{%- if this.variables.rside|default(true) -%}yes{%- else -%}no{%- endif -%}" >
 {%- block body -%}
-        <header>
-            <figure class="logotype">
-                <a class="logotype" href="{{ '#' }}">
-                    <img class="logotype" src="{{ 'static/images/logotype.svg' }}" alt="logotype" />
-                </a>
-            </figure>
-            <nav class="nav-components">
+        <header data-is-large="yes">
+            <div class="header-content">
+                <figure class="logotype">
+                    <a class="logotype" href="{{ '#' }}"><img class="logotype" src="{{ 'static/images/logotype.svg' }}" alt="logotype" /></a>
+                </figure>
+                <nav class="nav-components">
 {%- block header_nav -%}
 <menu class="nav-components nav-components-0">
 {%- for template in hierarchy -%}
@@ -81,19 +80,20 @@
 {%- endfor-%}
 </menu>
 {%- endblock header_nav -%}
-            </nav>
-            <nav class="nav-toc">
-                <menu class="nav-toc nav-toc-0">
-                    <li class="nav-toc nav-toc-0">
-                        <a class="nav-toc nav-toc-0" href="#">{{ culture.translations.contents }}</a>
-                        <menu class="nav-toc nav-toc-1">
-                            {%- for toc in this.toc -%}
-                            {{ toc_navigation(toc) }}
-                            {%- endfor-%}
-                        </menu>
-                    </li>
-                </menu>
-            </nav>
+                </nav>
+                <nav class="nav-toc">
+                    <menu class="nav-toc nav-toc-0">
+                        <li class="nav-toc nav-toc-0">
+                            <a class="nav-toc nav-toc-0" href="#">{{ culture.translations.contents }}</a>
+                            <menu class="nav-toc nav-toc-1">
+                                {%- for toc in this.toc -%}
+                                {{ toc_navigation(toc) }}
+                                {%- endfor-%}
+                            </menu>
+                        </li>
+                    </menu>
+                </nav>
+            </div>
         </header>
         <aside class="nav-hierarchy">
             <nav class="nav-hierarchy">
@@ -125,7 +125,7 @@
                         <menu class="nav-cultures">
                             {%- for culture, mutation in this.culture_mutations -%}
                             <li class="nav-cultures">
-                                <a class="nav-cultures" href="{{ mutation.output_link }}">{{ culture.name }}</a>
+                                <a class="nav-cultures" href="{{ mutation.output_link }}" hreflang="{{ culture.code }}">{{ culture.name }}</a>
                             </li>
                             {%- endfor -%}
                         </menu>

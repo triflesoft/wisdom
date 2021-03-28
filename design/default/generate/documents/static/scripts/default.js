@@ -47,26 +47,15 @@
 
     /* BEGIN: HEADER RESIZE ON DOCUMENT SCROLL */
     let headerElement = null;
-    let headerTimer = null;
     let headerResizeThresholdSmall = 1;
     let headerResizeThresholdLarge = 1;
 
-    function onDocumentScrollTimer(windowScrollY) {
-        headerTimer = null;
-
-        if (windowScrollY > headerResizeThresholdLarge) {
+    function onDocumentScroll(e) {
+        if (window.scrollY > headerResizeThresholdLarge) {
             headerElement.dataset.isLarge = "no";
-        } else if (windowScrollY < headerResizeThresholdSmall) {
+        } else if (window.scrollY < headerResizeThresholdSmall) {
             headerElement.dataset.isLarge = "yes";
         }
-    }
-
-    function onDocumentScroll(e) {
-        if (headerTimer !== null) {
-            clearTimeout(headerTimer);
-        }
-
-        setTimeout(onDocumentScrollTimer, 500, window.scrollY);
     }
 
     function configureHeader() {

@@ -2,125 +2,156 @@
 
 body {
     > header {
+        height: #{config.$layout__header_height}rem;
         background-color: config.$header__background_color;
-        box-shadow: 0 0 1.5rem config.$header__box_shadow_color;
 
-        > figure.logotype {
-            a.logotype > {
-                img.logotype {
-                    width:  #{config.$layout__header_logotype_width}rem;
-                    height: #{config.$layout__header_logotype_height}rem;
-                }
-            }
-        }
+        div.header-content {
+            display: grid;
+            grid-template-columns:
+                #{config.$layout__header_logotype_margin}rem
+                #{config.$layout__header_logotype_width}rem
+                #{config.$layout__header_logotype_margin}rem
+                1fr;
+            grid-template-rows: 1fr auto 1fr;
+            height: #{config.$layout__header_height}rem;
+            background-color: config.$header__background_color;
 
-        > nav.nav-components {
-            display: block;
+            a {
+                color: config.$header__a__color;
 
-            menu.nav-components {
-                list-style-type: none;
-
-                li.nav-components {
-                    a.nav-components {
-                        display: block;
-                        position: relative;
-                        padding: 0.5rem 1rem;
-                        letter-spacing: 0.1rem;
-                        text-transform: uppercase;
-                        white-space: nowrap;
-                    }
+                &:hover {
+                    color: config.$header__a__color__hover;
                 }
             }
 
-            > menu.nav-components.nav-components-0 {
+            > figure.logotype {
+                grid-column-start: 2;
+                grid-column-end: span 1;
+                grid-row-start: 2;
+                grid-row-end: span 1;
                 margin: auto 0;
 
-                > li.nav-components.nav-components-0 {
-                    display: inline-block;
-                    font-family: config.$header__menu__font_family;
-                    font-weight: config.$header__menu__font_weight;
-                    font-size: config.$header__menu__component0__font_size;
-
-
-                    > a.nav-components.nav-components-0 {
-
+                a.logotype > {
+                    img.logotype {
+                        width:  #{config.$layout__header_logotype_width}rem;
+                        height: #{config.$layout__header_logotype_height}rem;
                     }
+                }
+            }
 
-                    > menu.nav-components.nav-components-1 {
-                        position: absolute;
-                        visibility: hidden;
-                        opacity: 0;
-                        background-image: linear-gradient(config.$header__menu__background_color__hover1, config.$header__menu__background_color__hover2);
+            > nav.nav-components {
+                display: block;
+                grid-column-start: 4;
+                grid-column-end: span 1;
+                grid-row-start: 2;
+                grid-row-end: span 1;
+                margin: auto 0;
 
-                        > li.nav-components.nav-components-1 {
-                            font-size: config.$header__menu__component1__font_size;
+                menu.nav-components {
+                    list-style-type: none;
+
+                    li.nav-components {
+                        a.nav-components {
                             display: block;
+                            position: relative;
+                            padding: 0.5rem 1rem;
+                            letter-spacing: 0.1rem;
+                            text-transform: uppercase;
+                            white-space: nowrap;
+                        }
+                    }
+                }
+
+                > menu.nav-components.nav-components-0 {
+                    margin: auto 0;
+
+                    > li.nav-components.nav-components-0 {
+                        display: inline-block;
+                        font-family: config.$header__menu__font_family;
+                        font-weight: config.$header__menu__font_weight;
+                        font-size: config.$header__menu__component0__font_size;
+
+
+                        > a.nav-components.nav-components-0 {
+
+                        }
+
+                        > menu.nav-components.nav-components-1 {
+                            position: absolute;
+                            visibility: hidden;
+                            opacity: 0;
+                            background-image: linear-gradient(config.$header__menu__background_color__hover1, config.$header__menu__background_color__hover2);
+
+                            > li.nav-components.nav-components-1 {
+                                font-size: config.$header__menu__component1__font_size;
+                                display: block;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        > nav.nav-toc {
-            display: none;
+            > nav.nav-toc {
+                display: none;
 
-            menu.nav-toc {
-                list-style-type: none;
-                margin: 0 0 0 1rem;
+                menu.nav-toc {
+                    list-style-type: none;
+                    margin: 0 0 0 1rem;
 
-                li.nav-toc {
-                    a.nav-toc {
-                        display: block;
-                        position: relative;
-                        padding: 0.5rem 1rem;
-                        letter-spacing: 0.1rem;
-                        text-transform: uppercase;
-                        white-space: nowrap;
+                    li.nav-toc {
+                        a.nav-toc {
+                            display: block;
+                            position: relative;
+                            padding: 0.5rem 1rem;
+                            letter-spacing: 0.1rem;
+                            text-transform: uppercase;
+                            white-space: nowrap;
+                        }
                     }
                 }
-            }
 
-            > menu.nav-toc.nav-toc-0 {
-                margin: auto 0;
+                > menu.nav-toc.nav-toc-0 {
+                    margin: auto 0;
 
-                > li.nav-toc.nav-toc-0 {
-                    font-family: config.$header__menu__font_family;
-                    font-weight: config.$header__menu__font_weight;
-                    font-size: config.$header__menu__toc0__font_size;
+                    > li.nav-toc.nav-toc-0 {
+                        font-family: config.$header__menu__font_family;
+                        font-weight: config.$header__menu__font_weight;
+                        font-size: config.$header__menu__toc0__font_size;
 
-                    > menu.nav-toc.nav-toc-1 {
-                        position: absolute;
-                        visibility: hidden;
-                        opacity: 0;
-                        margin: 0;
-                        background-image: linear-gradient(config.$header__menu__background_color__hover1, config.$header__menu__background_color__hover2);
+                        > menu.nav-toc.nav-toc-1 {
+                            position: absolute;
+                            visibility: hidden;
+                            opacity: 0;
+                            margin: 0;
+                            background-image: linear-gradient(config.$header__menu__background_color__hover1, config.$header__menu__background_color__hover2);
 
-                        > li.nav-toc.nav-toc-1 {
-                            font-size: config.$header__menu__toc1__font_size;
+                            > li.nav-toc.nav-toc-1 {
+                                font-size: config.$header__menu__toc1__font_size;
 
-                            > menu.nav-toc.nav-toc-2 {
-                                > li.nav-toc.nav-toc-2 {
-                                    font-size: config.$header__menu__toc2__font_size;
+                                > menu.nav-toc.nav-toc-2 {
+                                    > li.nav-toc.nav-toc-2 {
+                                        font-size: config.$header__menu__toc2__font_size;
 
-                                    > menu.nav-toc.nav-toc-3 {
-                                        > li.nav-toc.nav-toc-3 {
-                                            font-size: config.$header__menu__toc3__font_size;
+                                        > menu.nav-toc.nav-toc-3 {
+                                            > li.nav-toc.nav-toc-3 {
+                                                font-size: config.$header__menu__toc3__font_size;
 
-                                            > menu.nav-toc.nav-toc-4 {
-                                                > li.nav-toc.nav-toc-4 {
-                                                    font-size: config.$header__menu__toc4__font_size;
+                                                > menu.nav-toc.nav-toc-4 {
+                                                    > li.nav-toc.nav-toc-4 {
+                                                        font-size: config.$header__menu__toc4__font_size;
 
-                                                    > menu.nav-toc.nav-toc-5 {
-                                                        > li.nav-toc.nav-toc-5 {
-                                                            font-size: config.$header__menu__toc5__font_size;
+                                                        > menu.nav-toc.nav-toc-5 {
+                                                            > li.nav-toc.nav-toc-5 {
+                                                                font-size: config.$header__menu__toc5__font_size;
 
-                                                            > menu.nav-toc.nav-toc-6 {
-                                                                > li.nav-toc.nav-toc-6 {
-                                                                    font-size: config.$header__menu__toc6__font_size;
+                                                                > menu.nav-toc.nav-toc-6 {
+                                                                    > li.nav-toc.nav-toc-6 {
+                                                                        font-size: config.$header__menu__toc6__font_size;
 
-                                                                    > menu.nav-toc.nav-toc-7 {
-                                                                        > li.nav-toc.nav-toc-7 {
-                                                                            font-size: config.$header__menu__toc7__font_size;
+                                                                        > menu.nav-toc.nav-toc-7 {
+                                                                            > li.nav-toc.nav-toc-7 {
+                                                                                font-size: config.$header__menu__toc7__font_size;
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
@@ -144,121 +175,131 @@ body {
 @media only screen and (min-width: config.$body__responsive_threshold) {
     body {
         > header {
-            display: grid;
-            grid-template-columns:
-                #{config.$layout__lside_width}rem
-                #{config.$layout__header_logotype_margin}rem
-                #{2*config.$layout__header_logotype_width}rem
-                #{config.$layout__header_logotype_margin}rem
-                max-content
-                1fr
-                auto
-                #{config.$layout__rside_width}rem;
-            grid-template-rows: 1fr auto 1fr;
             position: sticky;
             top: 0;
             z-index: 10;
             height: #{config.$layout__header_height}rem;
-            transition: height 0.6s;
 
             &[data-is-large="yes"] {
+                > div.header-content {
+                    height: #{config.$layout__header_height_max}rem;
+
+                    > figure.logotype {
+                        margin: auto 0;
+
+                        a.logotype > {
+                            img.logotype {
+                                width:  #{2*config.$layout__header_logotype_width}rem;
+                                height: #{2*config.$layout__header_logotype_height}rem;
+                            }
+                        }
+                    }
+                }
+
                 height: #{config.$layout__header_height_max}rem;
+            }
+
+            > div.header-content {
+                display: grid;
+                grid-template-columns:
+                    #{config.$layout__lside_width}rem
+                    #{config.$layout__header_logotype_margin}rem
+                    #{2*config.$layout__header_logotype_width}rem
+                    #{config.$layout__header_logotype_margin}rem
+                    max-content
+                    1fr
+                    auto
+                    #{config.$layout__rside_width}rem;
+                grid-template-rows: 1fr auto 1fr;
+                height: #{config.$layout__header_height}rem;
+                transition: height 1.0s;
 
                 > figure.logotype {
+                    grid-column-start: 3;
+                    grid-column-end: span 1;
+                    grid-row-start: 2;
+                    grid-row-end: span 1;
+                    margin: auto #{config.$layout__header_logotype_height / 2}rem;
+                    transition: margin 1.0s;
+
                     a.logotype > {
                         img.logotype {
-                            width:  #{2*config.$layout__header_logotype_width}rem;
-                            height: #{2*config.$layout__header_logotype_height}rem;
-                            margin: 0;
+                            width:  #{config.$layout__header_logotype_width}rem;
+                            height: #{config.$layout__header_logotype_height}rem;
+                            transition: width 1.0s, height 1.0s;
                         }
                     }
                 }
-            }
 
-            > figure.logotype {
-                grid-column-start: 3;
-                grid-column-end: span 1;
-                grid-row-start: 2;
-                grid-row-end: span 1;
+                > nav.nav-components {
+                    grid-column-start: 5;
+                    grid-column-end: span 1;
+                    grid-row-start: 2;
+                    grid-row-end: span 1;
+                    margin: auto 0;
 
-                a.logotype > {
-                    img.logotype {
-                        width:  #{config.$layout__header_logotype_width}rem;
-                        height: #{config.$layout__header_logotype_height}rem;
-                        margin: 0 #{config.$layout__header_logotype_height / 2}rem;
-                        transition: margin 0.4s, width 0.4s, height 0.4s;
-                    }
-                }
-            }
-
-            > nav.nav-components {
-                grid-column-start: 5;
-                grid-column-end: span 1;
-                grid-row-start: 2;
-                grid-row-end: span 1;
-                margin: auto 0;
-
-                > menu.nav-components.nav-components-0 {
-                    > li.nav-components.nav-components-0 {
-                        &:hover {
-                            background-color: config.$header__menu__background_color__hover1;
-                        }
-
-                        &.has-children:hover {
-                            position: relative;
-
-                            > menu.nav-components.nav-components-1 {
-                                left: 0;
-                                visibility: visible;
-                                opacity: 1;
-                                top: 100%;
-                                min-width: 100%;
-                                transition: opacity 0.5s;
+                    > menu.nav-components.nav-components-0 {
+                        > li.nav-components.nav-components-0 {
+                            &:hover {
+                                background-color: config.$header__menu__background_color__hover1;
                             }
-                        }
 
-                        &.selected {
-                            > a.nav-components.nav-components-0 {
-                                font-weight: 700;
+                            &.has-children:hover {
+                                position: relative;
+
+                                > menu.nav-components.nav-components-1 {
+                                    left: 0;
+                                    visibility: visible;
+                                    opacity: 1;
+                                    top: 100%;
+                                    min-width: 100%;
+                                    transition: opacity 0.5s;
+                                }
+                            }
+
+                            &.selected {
+                                > a.nav-components.nav-components-0 {
+                                    font-weight: 700;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            > nav.nav-toc {
-                display: block;
-                grid-column-start: 7;
-                grid-column-end: span 1;
-                grid-row-start: 2;
-                grid-row-end: span 1;
-                margin: auto 0;
+                > nav.nav-toc {
+                    display: block;
+                    grid-column-start: 7;
+                    grid-column-end: span 1;
+                    grid-row-start: 2;
+                    grid-row-end: span 1;
+                    margin: auto 0;
 
-                > menu.nav-toc.nav-toc-0 {
-                    > li.nav-toc.nav-toc-0 {
-                        &:hover {
-                            position: relative;
-                            background-color: config.$header__menu__background_color__hover1;
+                    > menu.nav-toc.nav-toc-0 {
+                        > li.nav-toc.nav-toc-0 {
+                            &:hover {
+                                position: relative;
+                                background-color: config.$header__menu__background_color__hover1;
 
-                            > menu.nav-toc.nav-toc-1 {
-                                right: 0;
-                                visibility: visible;
-                                opacity: 1;
-                                z-index: 11;
-                                top: 100%;
-                                min-width: 100%;
-                                transition: opacity 0.5s;
+                                > menu.nav-toc.nav-toc-1 {
+                                    right: 0;
+                                    visibility: visible;
+                                    opacity: 1;
+                                    z-index: 11;
+                                    top: 100%;
+                                    min-width: 100%;
+                                    transition: opacity 0.5s;
+                                }
                             }
-                        }
 
-                        &.selected {
+                            &.selected {
+                                > a.nav-toc.nav-toc-0 {
+                                    font-weight: 700;
+                                }
+                            }
+
                             > a.nav-toc.nav-toc-0 {
-                                font-weight: 700;
+                                text-align: right;
                             }
-                        }
-
-                        > a.nav-toc.nav-toc-0 {
-                            text-align: right;
                         }
                     }
                 }
