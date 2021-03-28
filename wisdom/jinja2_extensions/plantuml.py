@@ -8,15 +8,15 @@ from os.path import join
 from subprocess import run
 from urllib.parse import quote
 
-from .base import discover_extension
-from .base import generate_extension
+from .base import discover_content_extension
+from .base import generate_content_extension
 
 
-PlantUmlDiscoverExtension = discover_extension('PlantUmlDiscoverExtension', 'plantuml')
+PlantUmlDiscoverExtension = discover_content_extension('PlantUmlDiscoverExtension', 'plantuml')
 
 
-class PlantUmlGenerateExtension(generate_extension('PlantUmlGenerateExtensionBase', 'plantuml', ['PlantUML Diagram', 'svg'])):
-    def _process_markup(self, context, description, format, caller):
+class PlantUmlGenerateExtension(generate_content_extension('PlantUmlGenerateExtensionBase', 'plantuml')):
+    def _process_markup(self, context, caller, description='PlantUML Diagram', format='svg'):
         diagram_markup_text = str(caller())
         diagram_markup_data = diagram_markup_text.encode('utf-8')
         diagram_hash = sha512()

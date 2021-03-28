@@ -1,88 +1,202 @@
+from enum import auto
+from enum import Enum
 from functools import partialmethod
 from jinja2 import nodes
 from jinja2.ext import Extension
+# from jinja2.lexer import TOKEN_ADD                   # +
+from jinja2.lexer import TOKEN_ASSIGN                  # =
+# from jinja2.lexer import TOKEN_BLOCK_BEGIN           # {%
+from jinja2.lexer import TOKEN_BLOCK_END               # %}
+# from jinja2.lexer import TOKEN_COLON                 # :
+from jinja2.lexer import TOKEN_COMMA                   # ,
+# from jinja2.lexer import TOKEN_COMMENT
+# from jinja2.lexer import TOKEN_COMMENT_BEGIN
+# from jinja2.lexer import TOKEN_COMMENT_END
+# from jinja2.lexer import TOKEN_DATA
+# from jinja2.lexer import TOKEN_DIV                   # /
+# from jinja2.lexer import TOKEN_DOT                   # .
+# from jinja2.lexer import TOKEN_EOF
+# from jinja2.lexer import TOKEN_EQ                    # ==
+from jinja2.lexer import TOKEN_FLOAT
+# from jinja2.lexer import TOKEN_FLOORDIV              # //
+# from jinja2.lexer import TOKEN_GT                    # >
+# from jinja2.lexer import TOKEN_GTEQ                  # >=
+# from jinja2.lexer import TOKEN_INITIAL
+from jinja2.lexer import TOKEN_INTEGER
+# from jinja2.lexer import TOKEN_LBRACE                # {
+# from jinja2.lexer import TOKEN_LBRACKET              # [
+# from jinja2.lexer import TOKEN_LINECOMMENT
+# from jinja2.lexer import TOKEN_LINECOMMENT_BEGIN
+# from jinja2.lexer import TOKEN_LINECOMMENT_END
+# from jinja2.lexer import TOKEN_LINESTATEMENT_BEGIN
+# from jinja2.lexer import TOKEN_LINESTATEMENT_END
+# from jinja2.lexer import TOKEN_LPAREN                # (
+# from jinja2.lexer import TOKEN_LT                    # <
+# from jinja2.lexer import TOKEN_LTEQ                  # <=
+# from jinja2.lexer import TOKEN_MOD                   # %
+# from jinja2.lexer import TOKEN_MUL                   # *
+from jinja2.lexer import TOKEN_NAME
+# from jinja2.lexer import TOKEN_NE                    # !=
+# from jinja2.lexer import TOKEN_OPERATOR
+# from jinja2.lexer import TOKEN_PIPE                  # |
+# from jinja2.lexer import TOKEN_POW                   # **
+# from jinja2.lexer import TOKEN_RAW_BEGIN
+# from jinja2.lexer import TOKEN_RAW_END
+# from jinja2.lexer import TOKEN_RBRACE                # }
+# from jinja2.lexer import TOKEN_RBRACKET              # ]
+# from jinja2.lexer import TOKEN_RPAREN                # )
+# from jinja2.lexer import TOKEN_SEMICOLON             # ;
+from jinja2.lexer import TOKEN_STRING
+# from jinja2.lexer import TOKEN_SUB                   # -
+# from jinja2.lexer import TOKEN_TILDE                 # ~
+# from jinja2.lexer import TOKEN_VARIABLE_BEGIN
+# from jinja2.lexer import TOKEN_VARIABLE_END
+# from jinja2.lexer import TOKEN_WHITESPACE
 
 
-#class DiscoverExtension(Extension):
-#    tags = set(['TAG'])
-#
-#    def parse(self, parser):
-#        while parser.stream.current.type != 'block_end':
-#            next(parser.stream)
-#
-#        body = parser.parse_statements(['name:endTAG'], drop_needle=True)
-#
-#        return nodes.Const('')
+class AutomataState(Enum):
+    Expect_Name = auto()
+    Expect_Assign = auto()
+    Expect_Value = auto()
+    Expect_Comma = auto()
 
 
-def _discover_extension_parse(self, close_tag, parser):
-        while parser.stream.current.type != 'block_end':
+def _discover_content_extension_parse(self, close_token_condition, parser):
+        while parser.stream.current.type != TOKEN_BLOCK_END:
             next(parser.stream)
 
-        parser.parse_statements([close_tag], drop_needle=True)
+        parser.parse_statements([close_token_condition], drop_needle=True)
 
         return nodes.Const('')
 
 
-def discover_extension(name, tag):
+def discover_content_extension(name, tag):
     attributes = {
         'tags': set([tag]),
-        'parse': partialmethod(_discover_extension_parse, f'name:end{tag}')
+        'parse': partialmethod(_discover_content_extension_parse, f'{TOKEN_NAME}:end{tag}')
     }
 
     return type(name, (Extension, ), attributes)
 
-#class GenerateExtension(Extension):
-#    tags = set(['TAG'])
-#
-#    def parse(self, parser):
-#        name_token = parser.stream.next_if('name')
-#        args = [nodes.ContextReference()]
-#
-#        while parser.stream.current.type != 'block_end':
-#            if parser.stream.current.type in ('name', 'string'):
-#                args.append(nodes.Const(parser.stream.current.value))
-#                next(parser.stream)
-#
-#        if len(args) > 3:
-#            args = args[0:3]
-#        elif len(args) == 2:
-#            args.append(nodes.Const('svg'))
-#        elif len(args) == 1:
-#            args.append(nodes.Const('dot'))
-#            args.append(nodes.Const('svg'))
-#
-#        lineno = parser.stream.current.lineno
-#        body = parser.parse_statements(['name:endTAG'], drop_needle=True)
-#
-#        return nodes.CallBlock(self.call_method('_process_markup', args), [], [], body).set_lineno(lineno)
 
-
-def _generate_extension_parse(self, close_tag, default_attributes, parser):
-        name_token = parser.stream.next_if('name')
+def _generate_content_extension_parse(self, open_token_condition, close_token_condition, parser):
+        name_token = parser.stream.expect(open_token_condition)
         args = [nodes.ContextReference()]
+        kwargs = {}
+        automata_state = AutomataState.Expect_Name
 
-        while parser.stream.current.type != 'block_end':
-            if parser.stream.current.type in ('name', 'string'):
-                args.append(nodes.Const(parser.stream.current.value))
+        while parser.stream.current.type != TOKEN_BLOCK_END:
+            if automata_state == AutomataState.Expect_Name:
+                name_token = parser.stream.expect(TOKEN_NAME)
+                automata_state = AutomataState.Expect_Assign
+            elif automata_state == AutomataState.Expect_Assign:
+                parser.stream.skip_if(TOKEN_ASSIGN)
+                automata_state = AutomataState.Expect_Value
+            elif automata_state == AutomataState.Expect_Value:
+                value_token = parser.stream.next_if(TOKEN_FLOAT)
 
-            next(parser.stream)
+                if value_token:
+                    kwargs[name_token.value] = value_token.value
+                else:
+                    value_token = parser.stream.next_if(TOKEN_INTEGER)
 
-        for index, value in enumerate(default_attributes):
-            if len(args) <= index + 1:
-                args.append(nodes.Const(value))
+                    if value_token:
+                        kwargs[name_token.value] = value_token.value
+                    else:
+                        value_token = parser.stream.expect(TOKEN_STRING)
+                        kwargs[name_token.value] = value_token.value
 
-        args = args[0:len(default_attributes) + 1]
+                automata_state = AutomataState.Expect_Comma
+            elif automata_state == AutomataState.Expect_Comma:
+                parser.stream.skip_if(TOKEN_COMMA)
+                automata_state = AutomataState.Expect_Name
+
         lineno = parser.stream.current.lineno
-        body = parser.parse_statements([close_tag], drop_needle=True)
+        body = parser.parse_statements([close_token_condition], drop_needle=True)
 
-        return nodes.CallBlock(self.call_method('_process_markup', args), [], [], body).set_lineno(lineno)
+        return nodes.CallBlock(
+            self.call_method(
+                '_process_markup',
+                args,
+                [nodes.Keyword(name, nodes.Const(value)) for name, value in kwargs.items()]),
+            [],
+            [],
+            body).set_lineno(lineno)
 
 
-def generate_extension(name, tag, default_attributes):
+def generate_content_extension(name, tag):
     attributes = {
         'tags': set([tag]),
-        'parse': partialmethod(_generate_extension_parse, f'name:end{tag}', default_attributes)
+        'parse': partialmethod(_generate_content_extension_parse, f'{TOKEN_NAME}:{tag}', f'{TOKEN_NAME}:end{tag}')
+    }
+
+    return type(name, (Extension, ), attributes)
+
+
+def _discover_include_extension_parse(self, parser):
+        while parser.stream.current.type != TOKEN_BLOCK_END:
+            next(parser.stream)
+
+        return nodes.Const('')
+
+
+def discover_include_extension(name, tag):
+    attributes = {
+        'tags': set([tag]),
+        'parse': partialmethod(_discover_include_extension_parse)
+    }
+
+    return type(name, (Extension, ), attributes)
+
+
+def _generate_include_extension_parse(self, open_token_condition, parser):
+        name_token = parser.stream.expect(open_token_condition)
+        args = [nodes.ContextReference()]
+        kwargs = {}
+        automata_state = AutomataState.Expect_Name
+
+        while parser.stream.current.type != TOKEN_BLOCK_END:
+            if automata_state == AutomataState.Expect_Name:
+                name_token = parser.stream.expect(TOKEN_NAME)
+                automata_state = AutomataState.Expect_Assign
+            elif automata_state == AutomataState.Expect_Assign:
+                parser.stream.skip_if(TOKEN_ASSIGN)
+                automata_state = AutomataState.Expect_Value
+            elif automata_state == AutomataState.Expect_Value:
+                value_token = parser.stream.next_if(TOKEN_FLOAT)
+
+                if value_token:
+                    kwargs[name_token.value] = value_token.value
+                else:
+                    value_token = parser.stream.next_if(TOKEN_INTEGER)
+
+                    if value_token:
+                        kwargs[name_token.value] = value_token.value
+                    else:
+                        value_token = parser.stream.expect(TOKEN_STRING)
+                        kwargs[name_token.value] = value_token.value
+
+                automata_state = AutomataState.Expect_Comma
+            elif automata_state == AutomataState.Expect_Comma:
+                parser.stream.skip_if(TOKEN_COMMA)
+                automata_state = AutomataState.Expect_Name
+
+        lineno = parser.stream.current.lineno
+
+        return nodes.CallBlock(
+            self.call_method(
+                '_process_markup',
+                args,
+                [nodes.Keyword(name, nodes.Const(value)) for name, value in kwargs.items()]),
+            [],
+            [],
+            []).set_lineno(lineno)
+
+
+def generate_include_extension(name, tag):
+    attributes = {
+        'tags': set([tag]),
+        'parse': partialmethod(_generate_include_extension_parse, f'{TOKEN_NAME}:{tag}')
     }
 
     return type(name, (Extension, ), attributes)

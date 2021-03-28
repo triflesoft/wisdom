@@ -6,19 +6,19 @@ from pygments.styles import get_style_by_name
 from re import compile
 from urllib.parse import quote
 
-from .base import discover_extension
-from .base import generate_extension
+from .base import discover_content_extension
+from .base import generate_content_extension
 
 
 CIRCLED_TEXT = compile('[\u2776\u2777\u2778\u2779\u277A\u277B\u277C\u277D\u277E\u277F]')
 CIRCLED_HTML = compile('<span style="[^"]+">([\u2776\u2777\u2778\u2779\u277A\u277B\u277C\u277D\u277E\u277F])</span>')
 
 
-PygmentsDiscoverExtension = discover_extension('PygmentsDiscoverExtension', 'pygments')
+PygmentsDiscoverExtension = discover_content_extension('PygmentsDiscoverExtension', 'pygments')
 
 
-class PygmentsGenerateExtension(generate_extension('PygmentsGenerateExtensionBase', 'pygments', [None, None])):
-    def _process_markup(self, context, lexer, style, caller):
+class PygmentsGenerateExtension(generate_content_extension('PygmentsGenerateExtensionBase', 'pygments')):
+    def _process_markup(self, context, caller, lexer=None, style=None):
         code_text = str(caller())
         code_lexer = lexer or context['component'].variables.get('pygments_lexer', None)
         code_style = style or context['component'].variables.get('pygments_style', 'default')

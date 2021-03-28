@@ -8,15 +8,15 @@ from os.path import join
 from subprocess import run
 from urllib.parse import quote
 
-from .base import discover_extension
-from .base import generate_extension
+from .base import discover_content_extension
+from .base import generate_content_extension
 
 
-GraphvizDiscoverExtension = discover_extension('GraphvizDiscoverExtension', 'graphviz')
+GraphvizDiscoverExtension = discover_content_extension('GraphvizDiscoverExtension', 'graphviz')
 
 
-class GraphvizGenerateExtension(generate_extension('GraphvizGenerateExtensionBase', 'graphviz', ['Graphviz Diagram', 'svg', 'dot'])):
-    def _process_markup(self, context, description, format, executable, caller):
+class GraphvizGenerateExtension(generate_content_extension('GraphvizGenerateExtensionBase', 'graphviz')):
+    def _process_markup(self, context, caller, description='Graphviz Diagram', format='svg', executable='dot'):
         diagram_markup_text = str(caller())
         diagram_markup_data = diagram_markup_text.encode('utf-8')
         diagram_hash = sha512()
