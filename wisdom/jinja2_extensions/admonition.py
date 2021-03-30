@@ -7,7 +7,6 @@ AdmonitionDiscoverExtension = discover_content_extension('AdmonitionDiscoverExte
 
 class AdmonitionGenerateExtension(generate_content_extension('AdmonitionGenerateExtensionBase', 'admonition')):
     def _process_markup(self, context, caller, kind='note'):
-        this_output_link = context['this'].output_link
         icon_link = f'static/images/icon-admonition-{kind}.svg'
         text = str(caller())
 
@@ -15,7 +14,7 @@ class AdmonitionGenerateExtension(generate_content_extension('AdmonitionGenerate
 <div class="admonition-outer admonition-outer-{kind}">
     <div class="admonition-inner admonition-inner-{kind}">
         <figure class="admonition admonition-{kind}">
-            <img class="admonition admonition-{kind}" src="{icon_link}" />
+            <img class="admonition admonition-{kind}" src="{icon_link}" alt="{kind}"/>
         </figure>
         <p class="admonition admonition-{kind}">{text}</p>
     </div>
