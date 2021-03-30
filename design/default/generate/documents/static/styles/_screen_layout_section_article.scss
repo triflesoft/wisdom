@@ -1,6 +1,6 @@
 @use 'config';
 
-code.source-code-outer {
+div.source-code-outer {
     display: block;
     position: relative;
     margin: 1rem 0;
@@ -20,7 +20,7 @@ code.source-code-outer {
         }
     }
 
-    > pre.source-code-inner {
+    > div.source-code-inner {
         display: block;
         padding: 1rem 1rem 1rem 3rem;
         border: config.$common__border_width solid config.$color-gray-3;
@@ -137,8 +137,8 @@ th {
 }
 
 @media only screen and (min-width: config.$body__responsive_threshold) {
-    code.source-code-outer {
-        > pre.source-code-inner {
+    div.source-code-outer {
+        > div.source-code-inner {
             max-width: calc(100vw - #{config.$layout__lside_width + config.$layout__rside_width + 3}rem);
         }
     }

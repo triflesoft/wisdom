@@ -37,9 +37,9 @@ class PygmentsGenerateExtension(generate_content_extension('PygmentsGenerateExte
         code_text = CIRCLED_TEXT.sub('', code_text)
 
         return f'''
-<code class="source-code-outer source-code-pygments">
+<div class="source-code-outer source-code-pygments">
     <button class="original-code-copy" data-original-code="{quote(code_text)}">
         <img class="original-code-copy" src="static/images/icon-source-code-copy.svg" alt="" />
     </button>
-    <pre class="source-code-inner"><ol><li>{code_html}</li></ol></pre>
-</code>'''
+    <div class="source-code-inner"><ol><li>{code_html}</li></ol></div>
+</div>'''
