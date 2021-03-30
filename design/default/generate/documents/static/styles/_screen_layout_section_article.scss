@@ -26,6 +26,9 @@ div.source-code-outer {
         border: config.$common__border_width solid config.$color-gray-3;
         white-space: pre-wrap;
         word-wrap: break-word;
+        font-family: config.$common__code__font_family;
+        font-weight: config.$common__code__font_weight;
+        font-size:   config.$common__code__font_size;
 
         > ol {
             > li {
@@ -126,14 +129,155 @@ div.admonition-outer {
 @include admonition-specific(warning, config.$color-red-1,    config.$color-red-3,    config.$color-red-9);
 @include admonition-specific(caution, config.$color-orange-1, config.$color-orange-3, config.$color-orange-9);
 
-td {
-    border: 1px solid black;
-    padding: 0.1rem 0.5rem;
+@mixin datatable-sorted-column-specific($index) {
+    &.sorted-#{$index}-asc  { > thead, > tfoot { > tr > th { &:nth-child(#{$index}) { background-color: config.$color-gray-9; color: config.$color-white-1; > span.sort-icon::after { content: '🠟' } } } } }
+    &.sorted-#{$index}-desc { > thead, > tfoot { > tr > th { &:nth-child(#{$index}) { background-color: config.$color-gray-9; color: config.$color-white-1; > span.sort-icon::after { content: '🠝' } } } } }
+    &.sorted-#{$index}-asc  { > thead, > tfoot { > tr > th { &:nth-child(#{$index}) { background-color: config.$color-gray-9; color: config.$color-white-1; > span.sort-icon::after { content: '🠟' } } } } }
+    &.sorted-#{$index}-desc { > thead, > tfoot { > tr > th { &:nth-child(#{$index}) { background-color: config.$color-gray-9; color: config.$color-white-1; > span.sort-icon::after { content: '🠝' } } } } }
+    &.sorted-#{$index}-asc  { > tbody { > tr:nth-child(even) > th:nth-child(#{$index}) { background-color: config.$color-gray-3; } } }
+    &.sorted-#{$index}-desc { > tbody { > tr:nth-child(even) > th:nth-child(#{$index}) { background-color: config.$color-gray-3; } } }
+    &.sorted-#{$index}-asc  { > tbody { > tr:nth-child(even) > td:nth-child(#{$index}) { background-color: config.$color-gray-3; } } }
+    &.sorted-#{$index}-desc { > tbody { > tr:nth-child(even) > td:nth-child(#{$index}) { background-color: config.$color-gray-3; } } }
 }
 
-th {
-    border: 1px solid black;
-    padding: 0.1rem 0.5rem;
+div.data-table-outer {
+    position: relative;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background-color: config.$color-gray-1;
+
+    > button.original-code-copy {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+
+        > img.original-code-copy {
+            width:  1rem;
+            height: 1rem;
+        }
+    }
+
+    div.data-table-inner {
+        background-color: config.$color-white-1;
+        border: config.$common__border_width solid config.$color-gray-3;
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+
+            @include datatable-sorted-column-specific(1);
+            @include datatable-sorted-column-specific(2);
+            @include datatable-sorted-column-specific(3);
+            @include datatable-sorted-column-specific(4);
+            @include datatable-sorted-column-specific(5);
+            @include datatable-sorted-column-specific(6);
+            @include datatable-sorted-column-specific(7);
+            @include datatable-sorted-column-specific(8);
+            @include datatable-sorted-column-specific(9);
+            @include datatable-sorted-column-specific(10);
+            @include datatable-sorted-column-specific(11);
+            @include datatable-sorted-column-specific(12);
+            @include datatable-sorted-column-specific(13);
+            @include datatable-sorted-column-specific(14);
+            @include datatable-sorted-column-specific(15);
+            @include datatable-sorted-column-specific(16);
+            @include datatable-sorted-column-specific(17);
+            @include datatable-sorted-column-specific(18);
+            @include datatable-sorted-column-specific(19);
+            @include datatable-sorted-column-specific(20);
+
+            > thead, > tfoot {
+                background-color: config.$color-gray-2;
+
+                > tr {
+                    > th:first-child {
+                        width: 2rem;
+                        text-align: right;
+                        font-family: config.$common__code__font_family;
+                    }
+
+                    > th {
+                        position: relative;
+                        padding: 0.5rem 1rem 0.5rem 1rem;
+                        text-align: left;
+                        border-left: config.$common__border_width solid config.$color-gray-5;
+                        cursor: pointer;
+                        user-select: none;
+
+                        &:first-child {
+                            border-left: none;
+                        }
+
+                        &.data-cell-decimal {
+                            text-align: right;
+                        }
+
+                        &:hover {
+                            background-color: config.$color-orange-1;
+                        }
+
+                        > span.sort-icon {
+                            position: absolute;
+                            width: 1rem;
+                            right: 0;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            > tbody {
+                > tr {
+                    &:nth-child(even) {
+                        background-color: config.$color-gray-1;
+                    }
+
+                    &:hover {
+                        background-color: config.$color-orange-1;
+                    }
+
+                    > th:first-child {
+                        padding: 0.5rem 1rem;
+                        text-align: right;
+                        font-family: config.$common__code__font_family;
+                    }
+
+                    > td {
+                        padding: 0.5rem 1rem;
+                        border-left: config.$common__border_width solid config.$color-gray-5;
+                        user-select: all;
+
+                        &.data-type-currency {
+                            text-align: right;
+                            font-family: config.$common__code__font_family;
+                        }
+
+                        &.data-type-decimal {
+                            text-align: right;
+                            font-family: config.$common__code__font_family;
+                        }
+
+                        &.data-type-number {
+                            text-align: right;
+                            font-family: config.$common__code__font_family;
+                        }
+
+                        &.data-type-percent {
+                            text-align: right;
+                            font-family: config.$common__code__font_family;
+                        }
+
+                        &.data-type-scientific {
+                            text-align: right;
+                            font-family: config.$common__code__font_family;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @media only screen and (min-width: config.$body__responsive_threshold) {
