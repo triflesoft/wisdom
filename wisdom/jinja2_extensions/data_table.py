@@ -75,6 +75,9 @@ class TCellBase:
                         self.data_type = 'timedelta'
                         self.options['format'] = option[10:]
 
+    def to_data(self):
+        return self.content.replace('\t', '    ')
+
 
 class THeadCellBase(TCellBase):
     def to_html(self, locale_code):
@@ -263,10 +266,36 @@ class TableCells:
 
             self._postprocess()
 
-    def to_html(self, locale_code):
+    def to_data(self):
+        data_lines = []
+        data_line = []
+
+        for thead_cell in self.thead:
+            data_line.append(thead_cell.to_data())
+
+        data_lines.append('\t'.join(data_line))
+
+        for tbody_row in self.tbody:
+            data_line = []
+
+            for tbody_cell in tbody_row:
+                data_line.append(tbody_cell.to_data())
+
+            data_lines.append('\t'.join(data_line))
+
+        data_line = []
+
+        for tfoot_cell in self.thead:
+            data_line.append(tfoot_cell.to_data())
+
+        data_lines.append('\t'.join(data_line))
+
+        return '\r\n'.join(data_lines)
+
+    def to_html(self, locale_code, table_data):
         html_lines = []
         html_lines.append('<div class="data-table-outer">')
-        html_lines.append('<button class="original-code-copy" data-original-code="TODO: TABBED TABLE DATA">')
+        html_lines.append(f'<button class="original-code-copy" data-original-code="{table_data}">')
         html_lines.append('<img class="original-code-copy" src="static/images/icon-source-code-copy.svg" alt="" />')
         html_lines.append('</button>')
         html_lines.append('<div class="data-table-inner">')
@@ -331,5 +360,6 @@ class DataTableGenerateExtension(generate_include_extension('DataTableGenerateEx
         data_path = normpath(abspath(data_path))
 
         table_cells.load_csv(data_path, cvs_dialect, linenumber_column)
+        table_data = table_cells.to_data()
 
-        return table_cells.to_html(locale_code)
+        return table_cells.to_html(locale_code, table_data)

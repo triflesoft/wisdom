@@ -32,6 +32,8 @@ div.source-code-outer {
 
         > ol {
             > li {
+                user-select: all;
+
                 &::marker {
                     color: config.$color-gray-3;
                 }
