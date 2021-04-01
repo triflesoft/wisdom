@@ -1,3 +1,4 @@
+from collections import deque
 from enum import auto
 from enum import Enum
 from functools import partialmethod
@@ -61,25 +62,20 @@ class AutomataState(Enum):
     Expect_Comma = auto()
 
 
-def _discover_content_extension_parse(self, close_token_condition, parser):
-        while parser.stream.current.type != TOKEN_BLOCK_END:
-            next(parser.stream)
+class ExtensionBase(Extension):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._linenos = deque()
+        self.source_path = None
+        self.source_line = None
 
-        parser.parse_statements([close_token_condition], drop_needle=True)
+    def _process_markup_wrapper(self, *args, **kwargs):
+        self.source_path, self.source_line = self._linenos.pop()
 
-        return nodes.Const('')
-
-
-def discover_content_extension(name, tag):
-    attributes = {
-        'tags': set([tag]),
-        'parse': partialmethod(_discover_content_extension_parse, f'{TOKEN_NAME}:end{tag}')
-    }
-
-    return type(name, (Extension, ), attributes)
+        return self._process_markup(*args, **kwargs)
 
 
-def _generate_content_extension_parse(self, open_token_condition, close_token_condition, parser):
+def _content_extension_parse(self, open_token_condition, close_token_condition, parser):
         name_token = parser.stream.expect(open_token_condition)
         args = [nodes.ContextReference()]
         kwargs = {}
@@ -113,10 +109,11 @@ def _generate_content_extension_parse(self, open_token_condition, close_token_co
 
         lineno = parser.stream.current.lineno
         body = parser.parse_statements([close_token_condition], drop_needle=True)
+        self._linenos.appendleft((parser.filename, lineno))
 
         return nodes.CallBlock(
             self.call_method(
-                '_process_markup',
+                '_process_markup_wrapper',
                 args,
                 [nodes.Keyword(name, nodes.Const(value)) for name, value in kwargs.items()]),
             [],
@@ -124,32 +121,16 @@ def _generate_content_extension_parse(self, open_token_condition, close_token_co
             body).set_lineno(lineno)
 
 
-def generate_content_extension(name, tag):
+def content_extension(name, tag):
     attributes = {
         'tags': set([tag]),
-        'parse': partialmethod(_generate_content_extension_parse, f'{TOKEN_NAME}:{tag}', f'{TOKEN_NAME}:end{tag}')
+        'parse': partialmethod(_content_extension_parse, f'{TOKEN_NAME}:{tag}', f'{TOKEN_NAME}:end{tag}'),
     }
 
-    return type(name, (Extension, ), attributes)
+    return type(name, (ExtensionBase, ), attributes)
 
 
-def _discover_include_extension_parse(self, parser):
-        while parser.stream.current.type != TOKEN_BLOCK_END:
-            next(parser.stream)
-
-        return nodes.Const('')
-
-
-def discover_include_extension(name, tag):
-    attributes = {
-        'tags': set([tag]),
-        'parse': partialmethod(_discover_include_extension_parse)
-    }
-
-    return type(name, (Extension, ), attributes)
-
-
-def _generate_include_extension_parse(self, open_token_condition, parser):
+def _include_extension_parse(self, open_token_condition, parser):
         name_token = parser.stream.expect(open_token_condition)
         args = [nodes.ContextReference()]
         kwargs = {}
@@ -182,10 +163,11 @@ def _generate_include_extension_parse(self, open_token_condition, parser):
                 automata_state = AutomataState.Expect_Name
 
         lineno = parser.stream.current.lineno
+        self._linenos.appendleft((parser.filename, lineno))
 
         return nodes.CallBlock(
             self.call_method(
-                '_process_markup',
+                '_process_markup_wrapper',
                 args,
                 [nodes.Keyword(name, nodes.Const(value)) for name, value in kwargs.items()]),
             [],
@@ -193,10 +175,10 @@ def _generate_include_extension_parse(self, open_token_condition, parser):
             []).set_lineno(lineno)
 
 
-def generate_include_extension(name, tag):
+def include_extension(name, tag):
     attributes = {
         'tags': set([tag]),
-        'parse': partialmethod(_generate_include_extension_parse, f'{TOKEN_NAME}:{tag}')
+        'parse': partialmethod(_include_extension_parse, f'{TOKEN_NAME}:{tag}')
     }
 
-    return type(name, (Extension, ), attributes)
+    return type(name, (ExtensionBase, ), attributes)

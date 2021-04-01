@@ -7,7 +7,6 @@ body {
         > nav.nav-hierarchy {
             menu.nav-hierarchy {
                 list-style-type: none;
-                margin: 0 0 0 1rem;
 
                 li.nav-hierarchy {
                     color: config.$aside__li_color__before;
@@ -19,6 +18,10 @@ body {
                     a.nav-hierarchy {
                         display: inline-block;
                         line-height: 1.5;
+                    }
+
+                    menu.nav-hierarchy {
+                        margin: 0 0 0 1rem;
                     }
 
                     &.selected {
@@ -114,7 +117,7 @@ body {
     }
 }
 
-@media only screen and (min-width: config.$body__responsive_threshold) {
+@media only screen and (min-width: config.$body__responsive_threshold_small) {
     body {
         > aside.nav-hierarchy {
             position: sticky;

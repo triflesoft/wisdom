@@ -86,9 +86,10 @@ class TemplateTocDiscoveryParser(HTMLParser):
         'h6': 6,
     }
 
-    def __init__(self, source_path: str):
+    def __init__(self, source_path: str, source_html):
         super().__init__()
         self.source_path = source_path
+        self.source_html = source_html
         self.tag_stats = defaultdict(int)
         self.active_tag_name = None
         self.active_tag_title = None
@@ -97,9 +98,18 @@ class TemplateTocDiscoveryParser(HTMLParser):
         self.attr_ids = set()
         self.toc = []
         self.ancestors = []
+        self.feed(source_html)
+
+    def error_context(self):
+        lines = self.source_html.splitlines(keepends=True)
+        lower_line = max(self.lineno - 5, 0)
+        upper_line = min(self.lineno + 5, len(lines))
+
+        return ''.join(lines[lower_line:upper_line])
 
     def handle_starttag(self, name: str, attrs: list):
         if self.active_tag_name:
+            error(self.error_context())
             error(
                 'Template "%s" TOC is inconsistent, tag <%s> cannot have children, but tag <%s> was found inside it.',
                 self.source_path,
@@ -112,6 +122,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
                 self.active_tag_attr_id = dict(attrs).get('id', '')
 
                 if not self.active_tag_attr_id:
+                    error(self.error_context())
                     error(
                         'Template "%s" TOC is inconsistent, tag <%s> has not id attribute specified.',
                         self.source_path,
@@ -119,6 +130,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
                     raise RuntimeError()
 
                 if self.active_tag_attr_id in self.attr_ids:
+                    error(self.error_context())
                     error(
                         'Template "%s" TOC is inconsistent, tag <%s id="%d"> has non-unique id attribute specified.',
                         self.source_path,
@@ -128,6 +140,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
 
                 if len(self.toc) > 0:
                     if self.TAG_LEVELS[self.active_tag_name] - self.last_tag_level > 1:
+                        error(self.error_context())
                         error(
                             'Template "%s" TOC is inconsistent, tag <%s id="%s"> follows tag <%s id="%s">.',
                             self.source_path,
@@ -142,6 +155,7 @@ class TemplateTocDiscoveryParser(HTMLParser):
     def handle_endtag(self, name: str):
         if self.active_tag_name:
             if name != self.active_tag_name:
+                error(self.error_context())
                 error(
                     'Template "%s" TOC is inconsistent, tag </%s> was closed, but <%s> was previously open.',
                     self.source_path,
@@ -526,8 +540,7 @@ class SourceDiscovery:
 
                                 jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))
                                 output_html = jinja2_template.render({'this': template})
-                                toc_parser = TemplateTocDiscoveryParser(template.source_path)
-                                toc_parser.feed(output_html)
+                                toc_parser = TemplateTocDiscoveryParser(template.source_path, output_html)
 
                                 if toc_parser.tag_stats['h1'] == 0:
                                     warning(

@@ -6,10 +6,14 @@ from .graphviz import GraphvizDiscoverExtension
 from .graphviz import GraphvizGenerateExtension
 from .markdown import MarkDownDiscoverExtension
 from .markdown import MarkDownGenerateExtension
+from .page import PageDiscoverExtension
+from .page import PageGenerateExtension
 from .plantuml import PlantUmlDiscoverExtension
 from .plantuml import PlantUmlGenerateExtension
 from .pygments import PygmentsDiscoverExtension
 from .pygments import PygmentsGenerateExtension
+from .section import SectionGenerateExtension
+
 
 JINJA2_DISCOVER_EXTENSIONS = (
     'jinja2.ext.do',
@@ -18,8 +22,12 @@ JINJA2_DISCOVER_EXTENSIONS = (
     DataTableDiscoverExtension,
     GraphvizDiscoverExtension,
     MarkDownDiscoverExtension,
+    PageDiscoverExtension,
     PlantUmlDiscoverExtension,
-    PygmentsDiscoverExtension)
+    PygmentsDiscoverExtension,
+    SectionGenerateExtension
+)
+
 
 JINJA2_GENERATE_EXTENSIONS = (
     'jinja2.ext.do',
@@ -28,8 +36,12 @@ JINJA2_GENERATE_EXTENSIONS = (
     DataTableGenerateExtension,
     GraphvizGenerateExtension,
     MarkDownGenerateExtension,
+    PageGenerateExtension,
     PlantUmlGenerateExtension,
-    PygmentsGenerateExtension)
+    PygmentsGenerateExtension,
+    SectionGenerateExtension,
+)
+
 
 __all__ = (
     'JINJA2_DISCOVER_EXTENSIONS',

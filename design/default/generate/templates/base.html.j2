@@ -109,32 +109,30 @@
             </nav>
         </aside>
         <main>
-            <section>
-                <article class="nav-relations">
-                    <h1>{{ this.variables.title }}</h1>
-                    <nav class="nav-versions">
-                        <menu class="nav-versions">
-                            {%- for version, mutation in this.version_mutations -%}
-                            <li class="nav-versions">
-                                <a class="nav-versions" href="{{ mutation.output_link }}">{{ version.name }}</a>
-                            </li>
-                            {%- endfor -%}
-                        </menu>
-                    </nav>
-                    <nav class="nav-cultures">
-                        <menu class="nav-cultures">
-                            {%- for culture, mutation in this.culture_mutations -%}
-                            <li class="nav-cultures">
-                                <a class="nav-cultures" href="{{ mutation.output_link }}" hreflang="{{ culture.code }}">{{ culture.name }}</a>
-                            </li>
-                            {%- endfor -%}
-                        </menu>
-                    </nav>
-                    <p>{%- block article_foreword -%}{%- endblock article_foreword -%}</p>
-                </article>
-            </section>
+            <article>
+                <h1>{{ this.variables.title }}</h1>
+                <nav class="nav-versions">
+                    <menu class="nav-versions">
+                        {%- for version, mutation in this.version_mutations -%}
+                        <li class="nav-versions">
+                            <a class="nav-versions" href="{{ mutation.output_link }}">{{ version.name }}</a>
+                        </li>
+                        {%- endfor -%}
+                    </menu>
+                </nav>
+                <nav class="nav-cultures">
+                    <menu class="nav-cultures">
+                        {%- for culture, mutation in this.culture_mutations -%}
+                        <li class="nav-cultures">
+                            <a class="nav-cultures" href="{{ mutation.output_link }}" hreflang="{{ culture.code }}">{{ culture.name }}</a>
+                        </li>
+                        {%- endfor -%}
+                    </menu>
+                </nav>
+                <p>{%- block article_foreword -%}{%- endblock article_foreword -%}</p>
 {%- block content -%}
 {%- endblock content -%}
+            </article>
         </main>
 {%- endblock body -%}
         <footer>

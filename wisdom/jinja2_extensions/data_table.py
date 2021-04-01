@@ -15,6 +15,7 @@ from datetime import datetime
 from datetime import time
 from datetime import timedelta
 from decimal import Decimal
+from logging import error
 from os.path import abspath
 from os.path import dirname
 from os.path import normpath
@@ -23,8 +24,7 @@ from re import compile
 from re import UNICODE
 from unicodedata import digit
 
-from .base import discover_include_extension
-from .base import generate_include_extension
+from .base import include_extension
 
 
 NATURAL_SORT_SPLIT_PATTERN = compile('\d+', UNICODE)
@@ -334,16 +334,26 @@ class TableCells:
         return ''.join(html_lines)
 
 
-DataTableDiscoverExtension = discover_include_extension('DataTableDiscoverExtension', 'data_table')
-
-
-class DataTableGenerateExtension(generate_include_extension('DataTableGenerateExtensionBase', 'data_table')):
+class DataTableDiscoverExtension(include_extension('DataTableDiscoverExtensionBase', 'data_table')):
     def _process_markup(
             self,
             context,
             caller,
-            relative_path='data.csv',
             absolute_path=None,
+            relative_path=None,
+            linenumber_column='|decimal|#',
+            cvs_dialect='excel'):
+
+        return ''
+
+
+class DataTableGenerateExtension(include_extension('DataTableGenerateExtensionBase', 'data_table')):
+    def _process_markup(
+            self,
+            context,
+            caller,
+            absolute_path=None,
+            relative_path=None,
             linenumber_column='|decimal|#',
             cvs_dialect='excel'):
         this = context['this']
@@ -354,8 +364,15 @@ class DataTableGenerateExtension(generate_include_extension('DataTableGenerateEx
 
         if absolute_path:
             data_path = join(context['output_path'], absolute_path)
-        else:
+        elif relative_path:
             data_path = join(dirname(context['this'].source_path), relative_path)
+        else:
+            error(
+                'Document "%s:%d" contains invalid datatable. Either absolute_path, or relative_path must be specified.',
+                self.source_path,
+                self.source_line)
+
+            raise RuntimeError()
 
         data_path = normpath(abspath(data_path))
 

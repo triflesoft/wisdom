@@ -114,14 +114,15 @@ $layout__header_logotype_width:  3;
 $layout__header_logotype_margin: 1;
 $layout__header_toc_width:      20;
 $layout__footer_height:          4;
-$layout__lside_width:           20;
+$layout__lside_width:           15;
 $layout__rside_width:           30;
 
 
 $body__font_family: 'Open Sans', sans-serif;
 $body__font_weight: 400;
 $body__font_size: 12pt;
-$body__responsive_threshold: 1024px;
+$body__responsive_threshold_small: 1024px;
+$body__responsive_threshold_large: 1366px;
 
 $header__background_color: $color-blue-6;
 $header__a__color:         $color-white-2;
@@ -146,27 +147,28 @@ $aside__li_color__before: $color-gray-5;
 $aside__background_color: $color-white-2;
 $aside__menu__font_family: 'Roboto', sans-serif;
 $aside__menu__font_weight: 300;
-$aside__menu__hierarchy0__size__before: 1.0rem;
-$aside__menu__hierarchy1__size__before: 1.0rem;
-$aside__menu__hierarchy2__size__before: 0.9rem;
-$aside__menu__hierarchy3__size__before: 0.9rem;
-$aside__menu__hierarchy4__size__before: 0.8rem;
-$aside__menu__hierarchy5__size__before: 0.8rem;
+$aside__menu__hierarchy0__size__before: 0.8rem;
+$aside__menu__hierarchy1__size__before: 0.8rem;
+$aside__menu__hierarchy2__size__before: 0.7rem;
+$aside__menu__hierarchy3__size__before: 0.7rem;
+$aside__menu__hierarchy4__size__before: 0.7rem;
+$aside__menu__hierarchy5__size__before: 0.7rem;
 $aside__menu__hierarchy6__size__before: 0.7rem;
 $aside__menu__hierarchy7__size__before: 0.7rem;
-$aside__menu__hierarchy0__size: 1.2rem;
-$aside__menu__hierarchy1__size: 1.2rem;
-$aside__menu__hierarchy2__size: 1.0rem;
-$aside__menu__hierarchy3__size: 1.0rem;
+$aside__menu__hierarchy0__size: 1.0rem;
+$aside__menu__hierarchy1__size: 1.0rem;
+$aside__menu__hierarchy2__size: 0.9rem;
+$aside__menu__hierarchy3__size: 0.9rem;
 $aside__menu__hierarchy4__size: 0.9rem;
 $aside__menu__hierarchy5__size: 0.9rem;
-$aside__menu__hierarchy6__size: 0.8rem;
-$aside__menu__hierarchy7__size: 0.8rem;
+$aside__menu__hierarchy6__size: 0.9rem;
+$aside__menu__hierarchy7__size: 0.9rem;
 
 $main__background_color: $color-white-1;
 $main__article__mutation_separator___color: $color-blue-9;
 $main__article__menu__font_family: 'Roboto', sans-serif;
 $main__article__menu__font_weight: 300;
+$main__article__foreword___color: $color-gray-7;
 $main__aside__background_color: $color-purple-9;
 $main__aside__color: $color-white-2;
 

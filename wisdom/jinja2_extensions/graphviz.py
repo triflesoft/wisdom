@@ -8,14 +8,15 @@ from os.path import join
 from subprocess import run
 from urllib.parse import quote
 
-from .base import discover_content_extension
-from .base import generate_content_extension
+from .base import content_extension
 
 
-GraphvizDiscoverExtension = discover_content_extension('GraphvizDiscoverExtension', 'graphviz')
+class GraphvizDiscoverExtension(content_extension('GraphvizDiscoverExtensionBase', 'graphviz')):
+    def _process_markup(self, context, caller, description='Graphviz Diagram', format='svg', executable='dot'):
+        return ''
 
 
-class GraphvizGenerateExtension(generate_content_extension('GraphvizGenerateExtensionBase', 'graphviz')):
+class GraphvizGenerateExtension(content_extension('GraphvizGenerateExtensionBase', 'graphviz')):
     def _process_markup(self, context, caller, description='Graphviz Diagram', format='svg', executable='dot'):
         diagram_markup_text = str(caller())
         diagram_markup_data = diagram_markup_text.encode('utf-8')
@@ -37,8 +38,12 @@ class GraphvizGenerateExtension(generate_content_extension('GraphvizGenerateExte
                 capture_output=True)
 
             if result.returncode != 0:
-                error('Document "%s" contains invalid GraphViz markup.', context['template'].source_path)
-                error(result.stderr)
+                error(result.stderr.decode('utf-8'))
+                error(
+                    'Document "%s:%d" contains invalid GraphViz markup.',
+                    self.source_path,
+                    self.source_line)
+
                 raise RuntimeError()
 
             with open(local_path, 'wb') as image_file:

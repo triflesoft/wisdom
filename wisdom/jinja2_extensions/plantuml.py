@@ -8,14 +8,15 @@ from os.path import join
 from subprocess import run
 from urllib.parse import quote
 
-from .base import discover_content_extension
-from .base import generate_content_extension
+from .base import content_extension
 
 
-PlantUmlDiscoverExtension = discover_content_extension('PlantUmlDiscoverExtension', 'plantuml')
+class PlantUmlDiscoverExtension(content_extension('PlantUmlDiscoverExtensionBase', 'plantuml')):
+    def _process_markup(self, context, caller, description='PlantUML Diagram', format='svg'):
+        return ''
 
 
-class PlantUmlGenerateExtension(generate_content_extension('PlantUmlGenerateExtensionBase', 'plantuml')):
+class PlantUmlGenerateExtension(content_extension('PlantUmlGenerateExtensionBase', 'plantuml')):
     def _process_markup(self, context, caller, description='PlantUML Diagram', format='svg'):
         diagram_markup_text = str(caller())
         diagram_markup_data = diagram_markup_text.encode('utf-8')
@@ -37,8 +38,12 @@ class PlantUmlGenerateExtension(generate_content_extension('PlantUmlGenerateExte
                 capture_output=True)
 
             if result.returncode != 0:
-                error('Document "%s" contains invalid PlantUML markup.', context['template'].source_path)
                 error(result.stderr.decode('utf-8'))
+                error(
+                    'Document "%s:%d" contains invalid PlantUML markup.',
+                    self.source_path,
+                    self.source_line)
+
                 raise RuntimeError()
 
             with open(local_path, 'wb') as image_file:
