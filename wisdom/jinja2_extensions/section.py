@@ -1,4 +1,5 @@
 from jinja2 import escape
+from jinja2 import TemplateSyntaxError
 from logging import error
 from unicodedata import normalize
 
@@ -29,7 +30,7 @@ def id_from_text(text):
 
 
 class SectionGenerateExtension(content_extension('SectionGenerateExtensionBase', 'section')):
-    def _process_markup(self, context, caller, h2=None, h3=None, h4=None, h5=None, h6=None,):
+    def _process_markup(self, context, caller, h2=None, h3=None, h4=None, h5=None, h6=None):
         content_text = str(caller())
 
         header_text = ''
@@ -58,4 +59,10 @@ class SectionGenerateExtension(content_extension('SectionGenerateExtensionBase',
 
             raise RuntimeError()
 
-        return f'<section data-level="{header_type}"><{header_type} id="{header_type}_{id_from_text(header_text)}">{escape(header_text)}</{header_type}>{content_text}</section>'
+        return f'''
+<section data-level="{header_type}">
+<{header_type} id="{header_type}_{id_from_text(header_text)}">{escape(header_text)}</{header_type}>
+<div class="section-content">
+{content_text}
+</div>
+</section>'''

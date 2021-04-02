@@ -10,7 +10,7 @@ html {
 body {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto 3rem;
+    grid-template-rows: auto auto auto auto;
     background-color: config.$aside__background_color;
     font-family: config.$body__font_family;
     font-weight: config.$body__font_weight;
@@ -174,7 +174,7 @@ h6 {
 }
 
 ul {
-    margin: 0 0 0 1rem;
+    margin-left: config.$common__list_margin;
 }
 
 a {

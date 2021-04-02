@@ -3,8 +3,8 @@
 div.source-code-outer {
     display: block;
     position: relative;
-    margin: 1rem 0;
-    padding: 0.5rem;
+    margin:  config.$main__outer_block_margin;
+    padding: config.$main__outer_block_padding;
     background-color: config.$color-gray-1;
 
     > button.original-code-copy {
@@ -15,22 +15,25 @@ div.source-code-outer {
         z-index: 1;
 
         > img.original-code-copy {
-            width:  1rem;
-            height: 1rem;
+            width:  config.$main__button_copy_width;
+            height: config.$main__button_copy_height;
         }
     }
 
     > div.source-code-inner {
         display: block;
-        padding: 1rem 1rem 1rem 3rem;
+        padding: config.$main__inner_block_padding;
         border: config.$common__border_width solid config.$color-gray-3;
         white-space: pre-wrap;
         word-wrap: break-word;
         font-family: config.$common__code__font_family;
         font-weight: config.$common__code__font_weight;
-        font-size:   config.$common__code__font_size;
+        font-size: config.$common__code__font_size;
+        max-width: config.$main__inner_block_max_width_small;
 
         > ol {
+            margin-left: config.$main__code_line_number_margin;
+
             > li {
                 user-select: all;
 
@@ -54,7 +57,8 @@ div.source-code-outer {
 figure.illustration-outer {
     position: relative;
     width: max-content;
-    padding: 0.5rem;
+    margin:  config.$main__outer_block_margin;
+    padding: config.$main__outer_block_padding;
 
     > button.original-code-copy {
         display: block;
@@ -64,13 +68,13 @@ figure.illustration-outer {
         z-index: 1;
 
         > img.original-code-copy {
-            width:  1rem;
-            height: 1rem;
+            width:  config.$main__button_copy_width;
+            height: config.$main__button_copy_height;
         }
     }
 
     > img.illustration-inner {
-        padding: 1rem 1rem 1rem 1rem;
+        padding: config.$main__inner_block_padding;
         border: config.$common__border_width solid config.$color-gray-3;
     }
 
@@ -81,32 +85,33 @@ figure.illustration-outer {
 
 div.admonition-outer {
     position: relative;
-    margin: 1rem 0;
-    padding: 0.5rem;
+    margin:  config.$main__outer_block_margin;
+    padding: config.$main__outer_block_padding;
 
     > div.admonition-inner {
+        padding: config.$main__inner_block_padding;
         display: grid;
-        grid-template-columns: 1rem auto 1rem auto 1rem ;
-        grid-template-rows: 1rem auto 1rem ;
+        grid-template-columns: auto 1rem auto;
+        grid-template-rows: auto;
 
 
         > figure.admonition {
-            grid-column-start: 2;
+            grid-column-start: 1;
             grid-column-end: span 1;
-            grid-row-start: 2;
+            grid-row-start: 1;
             grid-row-end: span 1;
 
             > img.admonition {
-                margin: 1rem;
-                width:  4rem;
-                height: 4rem;
+                margin: config.$main__admonition_icon_margin;
+                width:  config.$main__admonition_icon_width;
+                height: config.$main__admonition_icon_height;
             }
         }
 
         > p.admonition {
-            grid-column-start: 4;
+            grid-column-start: 3;
             grid-column-end: span 1;
-            grid-row-start: 2;
+            grid-row-start: 1;
             grid-row-end: span 1;
         }
     }
@@ -144,8 +149,8 @@ div.admonition-outer {
 
 div.data-table-outer {
     position: relative;
-    margin: 1rem 0;
-    padding: 0.5rem;
+    margin:  config.$main__outer_block_margin;
+    padding: config.$main__outer_block_padding;
     background-color: config.$color-gray-1;
 
     > button.original-code-copy {
@@ -156,15 +161,15 @@ div.data-table-outer {
         z-index: 1;
 
         > img.original-code-copy {
-            width:  1rem;
-            height: 1rem;
+            width:  config.$main__button_copy_width;
+            height: config.$main__button_copy_height;
         }
     }
 
     div.data-table-inner {
         background-color: config.$color-white-1;
         border: config.$common__border_width solid config.$color-gray-3;
-        max-width: calc(100vw - 4rem);
+        max-width: config.$main__inner_block_max_width_small;
         overflow-x: scroll;
 
         table.data-table {
@@ -197,14 +202,14 @@ div.data-table-outer {
 
                 > tr {
                     > th:first-child {
-                        width: 2rem;
+                        width: config.$main__table_line_column_width;
                         text-align: right;
                         font-family: config.$common__code__font_family;
                     }
 
                     > th {
                         position: relative;
-                        padding: 0.5rem 1rem 0.5rem 1rem;
+                        padding: config.$main__table_th_padding;
                         text-align: left;
                         border-left: config.$common__border_width solid config.$color-gray-5;
                         cursor: pointer;
@@ -224,7 +229,7 @@ div.data-table-outer {
 
                         > span.sort-icon {
                             position: absolute;
-                            width: 1rem;
+                            width: config.$main__table_sort_icon_width;
                             right: 0;
                             text-align: center;
                         }
@@ -243,13 +248,13 @@ div.data-table-outer {
                     }
 
                     > th:first-child {
-                        padding: 0.5rem 1rem;
+                        padding: config.$main__table_td_padding;
                         text-align: right;
                         font-family: config.$common__code__font_family;
                     }
 
                     > td {
-                        padding: 0.5rem 1rem;
+                        padding: config.$main__table_td_padding;
                         border-left: config.$common__border_width solid config.$color-gray-5;
                         user-select: all;
 
@@ -285,9 +290,15 @@ div.data-table-outer {
 }
 
 @media only screen and (min-width: config.$body__responsive_threshold_small) {
+    div.data-table-outer {
+        div.data-table-inner {
+            max-width: config.$main__inner_block_max_width_large;
+        }
+    }
+
     div.source-code-outer {
         > div.source-code-inner {
-            max-width: calc(100vw - #{config.$layout__lside_width + config.$layout__rside_width + 3}rem);
+            max-width: config.$main__inner_block_max_width_large;
         }
     }
 }

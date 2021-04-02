@@ -54,7 +54,7 @@ body {
                         a.nav-components {
                             display: block;
                             position: relative;
-                            padding: 0.5rem 1rem;
+                            padding: config.$header__a_padding;
                             letter-spacing: 0.1rem;
                             text-transform: uppercase;
                             white-space: nowrap;
@@ -95,13 +95,13 @@ body {
 
                 menu.nav-toc {
                     list-style-type: none;
-                    margin: 0 0 0 1rem;
+                    margin-left: config.$common__list_margin;
 
                     li.nav-toc {
                         a.nav-toc {
                             display: block;
                             position: relative;
-                            padding: 0.5rem 1rem;
+                            padding: config.$header__a_padding;
                             letter-spacing: 0.1rem;
                             text-transform: uppercase;
                             white-space: nowrap;

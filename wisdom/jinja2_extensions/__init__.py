@@ -1,5 +1,6 @@
 from .admonition import AdmonitionDiscoverExtension
 from .admonition import AdmonitionGenerateExtension
+from .aside import AsideGenerateExtension
 from .data_table import DataTableDiscoverExtension
 from .data_table import DataTableGenerateExtension
 from .graphviz import GraphvizDiscoverExtension
@@ -19,6 +20,7 @@ JINJA2_DISCOVER_EXTENSIONS = (
     'jinja2.ext.do',
     'jinja2.ext.loopcontrols',
     AdmonitionDiscoverExtension,
+    AsideGenerateExtension,
     DataTableDiscoverExtension,
     GraphvizDiscoverExtension,
     MarkDownDiscoverExtension,
@@ -33,6 +35,7 @@ JINJA2_GENERATE_EXTENSIONS = (
     'jinja2.ext.do',
     'jinja2.ext.loopcontrols',
     AdmonitionGenerateExtension,
+    AsideGenerateExtension,
     DataTableGenerateExtension,
     GraphvizGenerateExtension,
     MarkDownGenerateExtension,

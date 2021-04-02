@@ -2,7 +2,7 @@
 
 body {
     > aside.nav-hierarchy {
-        padding: 1rem;
+        padding: config.$aside__padding;
 
         > nav.nav-hierarchy {
             menu.nav-hierarchy {
@@ -21,7 +21,7 @@ body {
                     }
 
                     menu.nav-hierarchy {
-                        margin: 0 0 0 1rem;
+                        margin-left: config.$common__list_margin;
                     }
 
                     &.selected {

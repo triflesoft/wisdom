@@ -5,8 +5,8 @@ body {
         > article {
             display: grid;
             grid-template-columns: auto 1fr auto;
-            row-gap: 1rem;
-            padding: 1rem;
+            row-gap: config.$main__section_spacing;
+            padding: config.$main__article_padding;
 
             > h1 {
                 grid-column-start: 1;
@@ -26,11 +26,11 @@ body {
                         display: inline-block;
 
                         > a.nav-versions {
-                            padding: 0.5rem;
+                            padding: config.$main__nav_a_padding;
                         }
 
                         & + li.nav-versions {
-                            border-left: 0.1rem dotted config.$main__article__mutation_separator___color;
+                            border-left: config.$common__border_width dotted config.$main__article__mutation_separator___color;
                         }
                     }
                 }
@@ -50,11 +50,11 @@ body {
                         display: inline-block;
 
                         > a.nav-cultures {
-                            padding: 0.5rem;
+                            padding: config.$main__nav_a_padding;
                         }
 
                         & + li.nav-cultures {
-                            border-left: 0.1rem dotted config.$main__article__mutation_separator___color;
+                            border-left: config.$common__border_width dotted config.$main__article__mutation_separator___color;
                         }
                     }
                 }
@@ -64,26 +64,85 @@ body {
                 grid-column-start: 1;
                 grid-column-end: span 3;
                 color: config.$main__article__foreword___color;
-                padding: 1rem;
+                padding: config.$main__p_padding;
             }
 
             > section {
                 grid-column-start: 1;
                 grid-column-end: span 3;
 
-                > p {
-                    padding: 1rem;
+                div.section-content {
+                    > p {
+                        padding: config.$main__p_padding;
+                    }
                 }
             }
 
             > aside {
                 grid-column-start: 1;
                 grid-column-end: span 3;
-                background-color: config.$main__aside__background_color;
-                color: config.$main__aside__color;
 
-                > p {
-                    padding: 1rem;
+                div.aside-content {
+                    background-color: config.$main__aside__background_color;
+                    color: config.$main__aside__color;
+
+                    > p {
+                        padding: config.$main__p_padding;
+                    }
+                }
+            }
+
+            > section[data-level=h1] + aside {
+                > div.header-placeholder {
+                    font-family: config.$common__hx__font_family;
+                    font-weight: config.$common__hx__font_weight;
+                    font-size:   config.$common__h1__font_size;
+                    margin:     (config.$common__h1__font_size / 6) 0 (config.$common__h1__font_size / 2) 0;
+                }
+            }
+
+            > section[data-level=h2] + aside {
+                > div.header-placeholder {
+                    font-family: config.$common__hx__font_family;
+                    font-weight: config.$common__hx__font_weight;
+                    font-size:   config.$common__h2__font_size;
+                    margin:     (config.$common__h2__font_size / 2) 0;
+                }
+            }
+
+            > section[data-level=h3] + aside {
+                > div.header-placeholder {
+                    font-family: config.$common__hx__font_family;
+                    font-weight: config.$common__hx__font_weight;
+                    font-size:   config.$common__h3__font_size;
+                    margin:     (config.$common__h3__font_size / 2) 0;
+                }
+            }
+
+            > section[data-level=h4] + aside {
+                > div.header-placeholder {
+                    font-family: config.$common__hx__font_family;
+                    font-weight: config.$common__hx__font_weight;
+                    font-size:   config.$common__h4__font_size;
+                    margin:     (config.$common__h4__font_size / 2) 0;
+                }
+            }
+
+            > section[data-level=h5] + aside {
+                > div.header-placeholder {
+                    font-family: config.$common__hx__font_family;
+                    font-weight: config.$common__hx__font_weight;
+                    font-size:   config.$common__h5__font_size;
+                    margin:     (config.$common__h5__font_size / 2) 0;
+                }
+            }
+
+            > section[data-level=h6] + aside {
+                > div.header-placeholder {
+                    font-family: config.$common__hx__font_family;
+                    font-weight: config.$common__hx__font_weight;
+                    font-size:   config.$common__h6__font_size;
+                    margin:     (config.$common__h6__font_size / 2) 0;
                 }
             }
         }

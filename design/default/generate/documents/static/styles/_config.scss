@@ -106,6 +106,8 @@ $common__a__color__hover: $color-blue-6;
 $common__code__font_family: 'Source Code Pro', monospace;
 $common__code__font_weight: 400;
 $common__code__font_size: 1rem;
+$common__list_margin: 1rem;
+
 
 $layout__header_height:          4;
 $layout__header_height_max:     10;
@@ -127,6 +129,7 @@ $body__responsive_threshold_large: 1366px;
 $header__background_color: $color-blue-6;
 $header__a__color:         $color-white-2;
 $header__a__color__hover:  $color-white-1;
+$header__a_padding: 0.5rem 1rem;
 $header__menu__background_color__hover1: $color-blue-6;
 $header__menu__background_color__hover2: $color-blue-8;
 $header__menu__border_color__hover: $color-gray-2;
@@ -143,6 +146,7 @@ $header__menu__toc5__font_size: 0.8rem;
 $header__menu__toc6__font_size: 0.8rem;
 $header__menu__toc7__font_size: 0.8rem;
 
+$aside__padding: 1rem;
 $aside__li_color__before: $color-gray-5;
 $aside__background_color: $color-white-2;
 $aside__menu__font_family: 'Roboto', sans-serif;
@@ -169,6 +173,31 @@ $main__article__mutation_separator___color: $color-blue-9;
 $main__article__menu__font_family: 'Roboto', sans-serif;
 $main__article__menu__font_weight: 300;
 $main__article__foreword___color: $color-gray-7;
+$main__article_padding: 1rem;
+$main__section_spacing: 1rem;
+$main__p_padding: 1rem;
+$main__nav_a_padding: 0.5rem;
+
+$main__table_th_padding: 0.5rem 1rem;
+$main__table_td_padding: 0.5rem 1rem;
+$main__table_line_column_width: 2rem;
+$main__table_sort_icon_width:   1rem;
+$main__outer_block_margin:  1rem 0;
+$main__outer_block_padding: 0.5rem;
+$main__inner_block_padding: 1rem;
+$_main__inner_block_max_width_small_temp: 2 * $main__article_padding + 2 * $main__outer_block_padding;
+$_main__inner_block_max_width_large_temp: 2 * $main__article_padding + 2 * $main__outer_block_padding + $layout__lside_width + $layout__rside_width;
+$main__inner_block_max_width_small: calc(100vw - #{$_main__inner_block_max_width_small_temp});
+$main__inner_block_max_width_large: calc(100vw - #{$_main__inner_block_max_width_large_temp});
+
+$main__button_copy_width: 1rem;
+$main__button_copy_height: 1rem;
+$main__admonition_icon_width:  4rem;
+$main__admonition_icon_height: 4rem;
+$main__admonition_icon_margin: 1rem;
+$main__code_line_number_margin: 2rem;
+
+
 $main__aside__background_color: $color-purple-9;
 $main__aside__color: $color-white-2;
 
