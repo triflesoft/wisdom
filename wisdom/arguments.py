@@ -1,13 +1,17 @@
 from argparse import ArgumentParser
 from os.path import abspath
+from os.path import dirname
 from os.path import isdir
+from os.path import join
 from os.path import normpath
+from sys import argv
 from sys import exit
 from sys import stderr
 
 
 class Arguments:
     def _parse(self):
+        default_design_path = join(dirname(argv[0]), 'design')
         argument_parser = ArgumentParser()
         argument_parser.add_argument(
             '-s', '--source',
@@ -17,7 +21,7 @@ class Arguments:
         argument_parser.add_argument(
             '-d', '--design',
             action='store',
-            default='./design/',
+            default=default_design_path,
             metavar='/PATH/TO/DESIGN/',
             help='Path to design files.')
         argument_parser.add_argument(
