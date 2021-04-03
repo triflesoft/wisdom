@@ -2,12 +2,12 @@ from .base import content_extension
 
 
 class AdmonitionDiscoverExtension(content_extension('AdmonitionDiscoverExtensionBase', 'admonition')):
-    def _process_markup(self, context, caller, kind='note'):
+    def _process_markup(self, context, source_path, source_line, caller, kind='note'):
         return ''
 
 
 class AdmonitionGenerateExtension(content_extension('AdmonitionGenerateExtensionBase', 'admonition')):
-    def _process_markup(self, context, caller, kind='note'):
+    def _process_markup(self, context, source_path, source_line, caller, kind='note'):
         icon_link = f'static/images/icon-admonition-{kind}.svg'
         text = str(caller())
 

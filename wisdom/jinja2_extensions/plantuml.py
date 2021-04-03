@@ -12,12 +12,12 @@ from .base import content_extension
 
 
 class PlantUmlDiscoverExtension(content_extension('PlantUmlDiscoverExtensionBase', 'plantuml')):
-    def _process_markup(self, context, caller, description='PlantUML Diagram', format='svg'):
+    def _process_markup(self, context, source_path, source_line, caller, description='PlantUML Diagram', format='svg'):
         return ''
 
 
 class PlantUmlGenerateExtension(content_extension('PlantUmlGenerateExtensionBase', 'plantuml')):
-    def _process_markup(self, context, caller, description='PlantUML Diagram', format='svg'):
+    def _process_markup(self, context, source_path, source_line, caller, description='PlantUML Diagram', format='svg'):
         diagram_markup_text = str(caller())
         diagram_markup_data = diagram_markup_text.encode('utf-8')
         diagram_hash = sha512()
@@ -41,8 +41,8 @@ class PlantUmlGenerateExtension(content_extension('PlantUmlGenerateExtensionBase
                 error(result.stderr.decode('utf-8'))
                 error(
                     'Document "%s:%d" contains invalid PlantUML markup.',
-                    self.source_path,
-                    self.source_line)
+                    source_path,
+                    source_line)
 
                 raise RuntimeError()
 

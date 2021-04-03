@@ -14,13 +14,13 @@ CIRCLED_HTML = compile('<span style="[^"]+">([\u2776\u2777\u2778\u2779\u277A\u27
 
 
 class PygmentsDiscoverExtension(content_extension('PygmentsDiscoverExtensionBase', 'pygments')):
-    def _process_markup(self, context, caller, lexer=None, style=None):
+    def _process_markup(self, context, source_path, source_line, caller, lexer=None, style=None):
         return ''
 
 
 
 class PygmentsGenerateExtension(content_extension('PygmentsGenerateExtensionBase', 'pygments')):
-    def _process_markup(self, context, caller, lexer=None, style=None):
+    def _process_markup(self, context, source_path, source_line, caller, lexer=None, style=None):
         code_text = str(caller())
         code_lexer = lexer or context['component'].variables.get('pygments_lexer', None)
         code_style = style or context['component'].variables.get('pygments_style', 'default')

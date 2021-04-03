@@ -62,23 +62,10 @@ class AutomataState(Enum):
     Expect_Comma = auto()
 
 
-class ExtensionBase(Extension):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._linenos = deque()
-        self.source_path = None
-        self.source_line = None
-
-    def _process_markup_wrapper(self, *args, **kwargs):
-        self.source_path, self.source_line = self._linenos.pop()
-
-        return self._process_markup(*args, **kwargs)
-
-
 def _content_extension_parse(self, open_token_condition, close_token_condition, parser):
-        name_token = parser.stream.expect(open_token_condition)
-        args = [nodes.ContextReference()]
+        args = [nodes.ContextReference(), nodes.Const(parser.filename), nodes.Const(parser.stream.current.lineno)]
         kwargs = {}
+        name_token = parser.stream.expect(open_token_condition)
         automata_state = AutomataState.Expect_Name
 
         while parser.stream.current.type != TOKEN_BLOCK_END:
@@ -109,11 +96,10 @@ def _content_extension_parse(self, open_token_condition, close_token_condition, 
 
         lineno = parser.stream.current.lineno
         body = parser.parse_statements([close_token_condition], drop_needle=True)
-        self._linenos.appendleft((parser.filename, lineno))
 
         return nodes.CallBlock(
             self.call_method(
-                '_process_markup_wrapper',
+                '_process_markup',
                 args,
                 [nodes.Keyword(name, nodes.Const(value)) for name, value in kwargs.items()]),
             [],
@@ -127,13 +113,13 @@ def content_extension(name, tag):
         'parse': partialmethod(_content_extension_parse, f'{TOKEN_NAME}:{tag}', f'{TOKEN_NAME}:end{tag}'),
     }
 
-    return type(name, (ExtensionBase, ), attributes)
+    return type(name, (Extension, ), attributes)
 
 
 def _include_extension_parse(self, open_token_condition, parser):
-        name_token = parser.stream.expect(open_token_condition)
-        args = [nodes.ContextReference()]
+        args = [nodes.ContextReference(), nodes.Const(parser.filename), nodes.Const(parser.stream.current.lineno)]
         kwargs = {}
+        name_token = parser.stream.expect(open_token_condition)
         automata_state = AutomataState.Expect_Name
 
         while parser.stream.current.type != TOKEN_BLOCK_END:
@@ -163,11 +149,10 @@ def _include_extension_parse(self, open_token_condition, parser):
                 automata_state = AutomataState.Expect_Name
 
         lineno = parser.stream.current.lineno
-        self._linenos.appendleft((parser.filename, lineno))
 
         return nodes.CallBlock(
             self.call_method(
-                '_process_markup_wrapper',
+                '_process_markup',
                 args,
                 [nodes.Keyword(name, nodes.Const(value)) for name, value in kwargs.items()]),
             [],
@@ -181,4 +166,4 @@ def include_extension(name, tag):
         'parse': partialmethod(_include_extension_parse, f'{TOKEN_NAME}:{tag}')
     }
 
-    return type(name, (ExtensionBase, ), attributes)
+    return type(name, (Extension, ), attributes)

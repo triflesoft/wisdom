@@ -10,6 +10,8 @@ class PageDiscoverExtension(include_extension('PageDiscoverExtensionBase', 'page
     def _process_markup(
             self,
             context,
+            source_path,
+            source_line,
             caller,
             relative_path=None,
             absolute_path=None):
@@ -20,6 +22,8 @@ class PageGenerateExtension(include_extension('PageGenerateExtensionBase', 'page
     def _process_markup(
             self,
             context,
+            source_path,
+            source_line,
             caller,
             relative_path=None,
             absolute_path=None):
@@ -41,8 +45,8 @@ class PageGenerateExtension(include_extension('PageGenerateExtensionBase', 'page
         else:
             error(
                 'Document "%s:%d" contains invalid page reference. Either absolute_path, or relative_path must be specified.',
-                self.source_path,
-                self.source_line)
+                source_path,
+                source_line)
 
             raise RuntimeError()
 
@@ -59,8 +63,8 @@ class PageGenerateExtension(include_extension('PageGenerateExtensionBase', 'page
 
         error(
             'Document "%s:%d" contains invalid page reference. Path "%s" cannot be resolved.',
-            self.source_path,
-            self.source_line,
+            source_path,
+            source_line,
             template_family)
 
         raise RuntimeError()

@@ -30,7 +30,7 @@ def id_from_text(text):
 
 
 class SectionGenerateExtension(content_extension('SectionGenerateExtensionBase', 'section')):
-    def _process_markup(self, context, caller, h2=None, h3=None, h4=None, h5=None, h6=None):
+    def _process_markup(self, context, source_path, source_line, caller, h2=None, h3=None, h4=None, h5=None, h6=None):
         content_text = str(caller())
 
         header_text = ''
@@ -54,8 +54,8 @@ class SectionGenerateExtension(content_extension('SectionGenerateExtensionBase',
         else:
             error(
                 'Document "%s:%d" contains invalid section. Either h2, h3, h4, h5, or h6 must be specified.',
-                self.source_path,
-                self.source_line)
+                source_path,
+                source_line)
 
             raise RuntimeError()
 

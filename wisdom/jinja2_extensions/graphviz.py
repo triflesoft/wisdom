@@ -12,12 +12,12 @@ from .base import content_extension
 
 
 class GraphvizDiscoverExtension(content_extension('GraphvizDiscoverExtensionBase', 'graphviz')):
-    def _process_markup(self, context, caller, description='Graphviz Diagram', format='svg', executable='dot'):
+    def _process_markup(self, context, source_path, source_line, caller, description='Graphviz Diagram', format='svg', executable='dot'):
         return ''
 
 
 class GraphvizGenerateExtension(content_extension('GraphvizGenerateExtensionBase', 'graphviz')):
-    def _process_markup(self, context, caller, description='Graphviz Diagram', format='svg', executable='dot'):
+    def _process_markup(self, context, source_path, source_line, caller, description='Graphviz Diagram', format='svg', executable='dot'):
         diagram_markup_text = str(caller())
         diagram_markup_data = diagram_markup_text.encode('utf-8')
         diagram_hash = sha512()
@@ -41,8 +41,8 @@ class GraphvizGenerateExtension(content_extension('GraphvizGenerateExtensionBase
                 error(result.stderr.decode('utf-8'))
                 error(
                     'Document "%s:%d" contains invalid GraphViz markup.',
-                    self.source_path,
-                    self.source_line)
+                    source_path,
+                    source_line)
 
                 raise RuntimeError()
 

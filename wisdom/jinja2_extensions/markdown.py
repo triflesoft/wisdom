@@ -5,7 +5,7 @@ from .base import content_extension
 
 
 class MarkDownDiscoverExtension(content_extension('MarkDownDiscoverExtensionnBase', 'markdown')):
-    def _process_markup(self, context, caller):
+    def _process_markup(self, context, source_path, source_line, caller):
         code_text = str(caller())
         code_ast = Parser().parse(code_text)
         code_html = HtmlRenderer().render(code_ast)
@@ -14,7 +14,7 @@ class MarkDownDiscoverExtension(content_extension('MarkDownDiscoverExtensionnBas
 
 
 class MarkDownGenerateExtension(content_extension('MarkDownGenerateExtensionBase', 'markdown')):
-    def _process_markup(self, context, caller):
+    def _process_markup(self, context, source_path, source_line, caller):
         code_text = str(caller())
         code_ast = Parser().parse(code_text)
         code_html = HtmlRenderer().render(code_ast)

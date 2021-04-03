@@ -338,6 +338,8 @@ class DataTableDiscoverExtension(include_extension('DataTableDiscoverExtensionBa
     def _process_markup(
             self,
             context,
+            source_path,
+            source_line,
             caller,
             absolute_path=None,
             relative_path=None,
@@ -351,6 +353,8 @@ class DataTableGenerateExtension(include_extension('DataTableGenerateExtensionBa
     def _process_markup(
             self,
             context,
+            source_path,
+            source_line,
             caller,
             absolute_path=None,
             relative_path=None,
@@ -369,8 +373,8 @@ class DataTableGenerateExtension(include_extension('DataTableGenerateExtensionBa
         else:
             error(
                 'Document "%s:%d" contains invalid datatable. Either absolute_path, or relative_path must be specified.',
-                self.source_path,
-                self.source_line)
+                source_path,
+                source_line)
 
             raise RuntimeError()
 

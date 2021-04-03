@@ -2,7 +2,7 @@ from .base import content_extension
 
 
 class AsideGenerateExtension(content_extension('AsideGenerateExtensionBase', 'aside')):
-    def _process_markup(self, context, caller):
+    def _process_markup(self, context, source_path, source_line, caller):
         content_text = str(caller())
 
         return f'''
