@@ -5,6 +5,7 @@ from jinja2 import FileSystemLoader
 from jinja2 import PrefixLoader
 from jinja2.sandbox import SandboxedEnvironment
 from logging import error
+from logging import info
 from logging import warning
 from os import scandir
 from os import stat
@@ -242,16 +243,20 @@ class SourceDiscovery:
 
             for directory_entry in scandir(root_path):
                 if directory_entry.is_dir(follow_symlinks=False):
-                    directory_queue.append((root_prefix_length, directory_entry.path))
+                    if directory_entry.name not in ('.cvs', '.git', '.hg', '.svn'):
+                        directory_queue.append((root_prefix_length, directory_entry.path))
                 elif directory_entry.is_file(follow_symlinks=False):
                     source_path = directory_entry.path
                     loader_path = directory_entry.path[root_prefix_length:]
+                    is_matched = False
 
                     for component in self.configuration.components.values():
                         if component.template_path_pattern:
                             match = component.template_path_pattern.fullmatch(loader_path)
 
                             if match:
+                                info('Template "%s" matched component "%s".', loader_path, component.code)
+                                is_matched = True
                                 output_path = join(self.arguments.output_path, match.group('output_path'))
                                 template_file_paths.append((source_path, loader_path, output_path, directory_entry.stat(), component, match.groupdict()))
                                 break
@@ -260,9 +265,14 @@ class SourceDiscovery:
                             match = component.document_path_pattern.fullmatch(loader_path)
 
                             if match:
+                                info('Document "%s" matched component "%s".', loader_path, component.code)
+                                is_matched = True
                                 output_path = join(self.arguments.output_path, match.group('output_path'))
                                 document_file_paths.append((source_path, loader_path, output_path, directory_entry.stat(), component))
                                 break
+
+                    if not is_matched:
+                        info('File "%s" did not match any component.', loader_path)
 
         directory_queue = []
         design_set = set()
