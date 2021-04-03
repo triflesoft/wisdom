@@ -171,7 +171,7 @@ body {
     }
 }
 
-@media only screen and (min-width: config.$body__responsive_threshold_small) and (max-width: config.$body__responsive_threshold_large) {
+@media only screen and (min-width: config.$body__responsive_threshold_small) {
     body {
         > header {
             position: sticky;
@@ -186,9 +186,7 @@ body {
                     #{config.$layout__header_logotype_margin}rem
                     #{2*config.$layout__header_logotype_width}rem
                     #{config.$layout__header_logotype_margin}rem
-                    max-content
-                    1fr
-                    auto;
+                    1fr;
                 grid-template-rows: 1fr auto 1fr;
                 height: #{config.$layout__header_height}rem;
                 transition: height 1.0s;
@@ -247,11 +245,12 @@ body {
 
                 > nav.nav-toc {
                     display: block;
-                    grid-column-start: 7;
+                    grid-column-start: 5;
                     grid-column-end: span 1;
                     grid-row-start: 2;
                     grid-row-end: span 1;
                     margin: auto 0;
+                    float: right;
 
                     > menu.nav-toc.nav-toc-0 {
                         > li.nav-toc.nav-toc-0 {
@@ -291,11 +290,6 @@ body {
 @media only screen and (min-width: config.$body__responsive_threshold_large) {
     body {
         > header {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            height: #{config.$layout__header_height}rem;
-
             &[data-is-large="yes"] {
                 > div.header-content {
                     height: #{config.$layout__header_height_max}rem;
@@ -313,111 +307,6 @@ body {
                 }
 
                 height: #{config.$layout__header_height_max}rem;
-            }
-
-            > div.header-content {
-                display: grid;
-                grid-template-columns:
-                    #{config.$layout__lside_width - 2*(config.$layout__header_logotype_margin + config.$layout__header_logotype_width)}rem
-                    #{config.$layout__header_logotype_margin}rem
-                    #{2*config.$layout__header_logotype_width}rem
-                    #{config.$layout__header_logotype_margin}rem
-                    max-content
-                    1fr
-                    auto;
-                grid-template-rows: 1fr auto 1fr;
-                height: #{config.$layout__header_height}rem;
-                transition: height 1.0s;
-
-                > figure.logotype {
-                    grid-column-start: 3;
-                    grid-column-end: span 1;
-                    grid-row-start: 2;
-                    grid-row-end: span 1;
-                    margin: auto #{config.$layout__header_logotype_height / 2}rem;
-                    transition: margin 1.0s;
-
-                    a.logotype > {
-                        img.logotype {
-                            width:  #{config.$layout__header_logotype_width}rem;
-                            height: #{config.$layout__header_logotype_height}rem;
-                            transition: width 1.0s, height 1.0s;
-                        }
-                    }
-                }
-
-                > nav.nav-components {
-                    grid-column-start: 5;
-                    grid-column-end: span 1;
-                    grid-row-start: 2;
-                    grid-row-end: span 1;
-                    margin: auto 0;
-
-                    > menu.nav-components.nav-components-0 {
-                        > li.nav-components.nav-components-0 {
-                            &:hover {
-                                background-color: config.$header__menu__background_color__hover1;
-                            }
-
-                            &.has-children:hover {
-                                position: relative;
-
-                                > menu.nav-components.nav-components-1 {
-                                    left: 0;
-                                    visibility: visible;
-                                    opacity: 1;
-                                    top: 100%;
-                                    min-width: 100%;
-                                    transition: opacity 0.5s;
-                                }
-                            }
-
-                            &.selected {
-                                > a.nav-components.nav-components-0 {
-                                    font-weight: 700;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                > nav.nav-toc {
-                    display: block;
-                    grid-column-start: 7;
-                    grid-column-end: span 1;
-                    grid-row-start: 2;
-                    grid-row-end: span 1;
-                    margin: auto 0;
-
-                    > menu.nav-toc.nav-toc-0 {
-                        > li.nav-toc.nav-toc-0 {
-                            &:hover {
-                                position: relative;
-                                background-color: config.$header__menu__background_color__hover1;
-
-                                > menu.nav-toc.nav-toc-1 {
-                                    right: 0;
-                                    visibility: visible;
-                                    opacity: 1;
-                                    z-index: 11;
-                                    top: 100%;
-                                    min-width: 100%;
-                                    transition: opacity 0.5s;
-                                }
-                            }
-
-                            &.selected {
-                                > a.nav-toc.nav-toc-0 {
-                                    font-weight: 700;
-                                }
-                            }
-
-                            > a.nav-toc.nav-toc-0 {
-                                text-align: right;
-                            }
-                        }
-                    }
-                }
             }
         }
     }
