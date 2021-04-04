@@ -70,12 +70,6 @@ body {
             > section {
                 grid-column-start: 1;
                 grid-column-end: span 3;
-
-                div.section-content {
-                    > p {
-                        padding: config.$main__p_padding;
-                    }
-                }
             }
 
             > aside {
@@ -85,10 +79,6 @@ body {
                 div.aside-content {
                     background-color: config.$main__aside__background_color;
                     color: config.$main__aside__color;
-
-                    > p {
-                        padding: config.$main__p_padding;
-                    }
                 }
             }
 
