@@ -1,7 +1,4 @@
 from collections import defaultdict
-from jinja2 import FileSystemLoader
-from jinja2 import PrefixLoader
-from jinja2.sandbox import SandboxedEnvironment
 from logging import info
 from logging import error
 from os import makedirs
@@ -10,8 +7,7 @@ from os.path import join
 from shutil import copy
 from subprocess import run
 
-from wisdom.jinja2_extensions import JINJA2_GENERATE_EXTENSIONS
-from wisdom.jinja2_filters import JINJA2_GENERATE_FILTERS
+from wisdom.ninja import GenerateEnvironment
 
 
 class Output:
@@ -44,24 +40,14 @@ class Output:
                             jinja2_environment = jinja2_environments.get(design_name, None)
 
                             if not jinja2_environment:
-                                jinja2_loader = PrefixLoader({
-                                    'source': FileSystemLoader(self.arguments.source_path),
-                                    'design': FileSystemLoader(join(self.arguments.design_path, design_name, 'generate/templates')),
-                                })
-                                jinja2_environment = SandboxedEnvironment(
-                                    trim_blocks=True,
-                                    lstrip_blocks=True,
-                                    keep_trailing_newline=True,
-                                    extensions=JINJA2_GENERATE_EXTENSIONS,
-                                    autoescape=True,
-                                    loader=jinja2_loader,
-                                    auto_reload=False)
-                                jinja2_environment.filters.update(JINJA2_GENERATE_FILTERS)
+                                jinja2_environment = GenerateEnvironment(
+                                    self.arguments.source_path,
+                                    join(self.arguments.design_path, design_name, 'generate/templates'),
+                                    self.arguments.output_path)
                                 jinja2_environments[design_name] = jinja2_environment
 
                             jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))
                             output_html = jinja2_template.render({
-                                'output_path': self.arguments.output_path,
                                 'component': template_component,
                                 'version': template_version,
                                 'culture': template_culture,

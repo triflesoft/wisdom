@@ -1,8 +1,8 @@
-from collections import deque
 from enum import auto
 from enum import Enum
 from functools import partialmethod
 from jinja2 import nodes
+from jinja2 import TemplateSyntaxError
 from jinja2.ext import Extension
 # from jinja2.lexer import TOKEN_ADD                   # +
 from jinja2.lexer import TOKEN_ASSIGN                  # =
@@ -53,6 +53,11 @@ from jinja2.lexer import TOKEN_STRING
 # from jinja2.lexer import TOKEN_VARIABLE_BEGIN
 # from jinja2.lexer import TOKEN_VARIABLE_END
 # from jinja2.lexer import TOKEN_WHITESPACE
+from os.path import abspath
+from os.path import dirname
+from os.path import isfile
+from os.path import join
+from os.path import normpath
 
 
 class AutomataState(Enum):
@@ -62,11 +67,12 @@ class AutomataState(Enum):
     Expect_Comma = auto()
 
 
-def _content_extension_parse(self, open_token_condition, close_token_condition, parser):
+def _embed_extension_parse(self, open_token_condition, close_token_condition, parser):
         args = [nodes.ContextReference(), nodes.Const(parser.filename), nodes.Const(parser.stream.current.lineno)]
         kwargs = {}
         name_token = parser.stream.expect(open_token_condition)
         automata_state = AutomataState.Expect_Name
+        content_path = None
 
         while parser.stream.current.type != TOKEN_BLOCK_END:
             if automata_state == AutomataState.Expect_Name:
@@ -87,7 +93,13 @@ def _content_extension_parse(self, open_token_condition, close_token_condition, 
                         kwargs[name_token.value] = value_token.value
                     else:
                         value_token = parser.stream.expect(TOKEN_STRING)
-                        kwargs[name_token.value] = value_token.value
+
+                        if name_token.value == 'absolute_path':
+                            content_path = normpath(abspath(join(parser.environment.globals['source_path'], value_token.value)))
+                        elif name_token.value == 'relative_path':
+                            content_path = normpath(abspath(join(dirname(parser.filename), value_token.value)))
+                        else:
+                            kwargs[name_token.value] = value_token.value
 
                 automata_state = AutomataState.Expect_Comma
             elif automata_state == AutomataState.Expect_Comma:
@@ -95,7 +107,15 @@ def _content_extension_parse(self, open_token_condition, close_token_condition, 
                 automata_state = AutomataState.Expect_Name
 
         lineno = parser.stream.current.lineno
-        body = parser.parse_statements([close_token_condition], drop_needle=True)
+
+        if content_path is not None:
+            if not isfile(content_path):
+                raise TemplateSyntaxError(f'Cannot find content file "{content_path}".', lineno, parser.filename)
+
+            kwargs['content_path'] = content_path
+            body = []
+        else:
+            body = parser.parse_statements([close_token_condition], drop_needle=True)
 
         return nodes.CallBlock(
             self.call_method(
@@ -107,16 +127,16 @@ def _content_extension_parse(self, open_token_condition, close_token_condition, 
             body).set_lineno(lineno)
 
 
-def content_extension(name, tag):
+def embed_extension(name, tag):
     attributes = {
         'tags': set([tag]),
-        'parse': partialmethod(_content_extension_parse, f'{TOKEN_NAME}:{tag}', f'{TOKEN_NAME}:end{tag}'),
+        'parse': partialmethod(_embed_extension_parse, f'{TOKEN_NAME}:{tag}', f'{TOKEN_NAME}:end{tag}'),
     }
 
     return type(name, (Extension, ), attributes)
 
 
-def _include_extension_parse(self, open_token_condition, parser):
+def _empty_extension_parse(self, open_token_condition, parser):
         args = [nodes.ContextReference(), nodes.Const(parser.filename), nodes.Const(parser.stream.current.lineno)]
         kwargs = {}
         name_token = parser.stream.expect(open_token_condition)
@@ -160,10 +180,10 @@ def _include_extension_parse(self, open_token_condition, parser):
             []).set_lineno(lineno)
 
 
-def include_extension(name, tag):
+def empty_extension(name, tag):
     attributes = {
         'tags': set([tag]),
-        'parse': partialmethod(_include_extension_parse, f'{TOKEN_NAME}:{tag}')
+        'parse': partialmethod(_empty_extension_parse, f'{TOKEN_NAME}:{tag}')
     }
 
     return type(name, (Extension, ), attributes)

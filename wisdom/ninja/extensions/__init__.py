@@ -1,11 +1,9 @@
-from .admonition import AdmonitionDiscoverExtension
 from .admonition import AdmonitionGenerateExtension
 from .aside import AsideGenerateExtension
 from .data_table import DataTableDiscoverExtension
 from .data_table import DataTableGenerateExtension
 from .graphviz import GraphvizDiscoverExtension
 from .graphviz import GraphvizGenerateExtension
-from .markdown import MarkDownDiscoverExtension
 from .markdown import MarkDownGenerateExtension
 from .page import PageDiscoverExtension
 from .page import PageGenerateExtension
@@ -19,11 +17,11 @@ from .section import SectionGenerateExtension
 JINJA2_DISCOVER_EXTENSIONS = (
     'jinja2.ext.do',
     'jinja2.ext.loopcontrols',
-    AdmonitionDiscoverExtension,
+    AdmonitionGenerateExtension,
     AsideGenerateExtension,
     DataTableDiscoverExtension,
     GraphvizDiscoverExtension,
-    MarkDownDiscoverExtension,
+    MarkDownGenerateExtension,
     PageDiscoverExtension,
     PlantUmlDiscoverExtension,
     PygmentsDiscoverExtension,

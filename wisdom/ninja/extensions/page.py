@@ -3,10 +3,10 @@ from logging import error
 from os.path import join
 from os.path import normpath
 
-from .base import include_extension
+from .base import empty_extension
 
 
-class PageDiscoverExtension(include_extension('PageDiscoverExtensionBase', 'page')):
+class PageDiscoverExtension(empty_extension('PageDiscoverExtensionBase', 'page')):
     def _process_markup(
             self,
             context,
@@ -18,7 +18,7 @@ class PageDiscoverExtension(include_extension('PageDiscoverExtensionBase', 'page
         return f'<a class="nav-internal" href=""></a>'
 
 
-class PageGenerateExtension(include_extension('PageGenerateExtensionBase', 'page')):
+class PageGenerateExtension(empty_extension('PageGenerateExtensionBase', 'page')):
     def _process_markup(
             self,
             context,

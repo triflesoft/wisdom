@@ -1,9 +1,6 @@
 from collections import defaultdict
 from html.parser import HTMLParser
 from itertools import chain
-from jinja2 import FileSystemLoader
-from jinja2 import PrefixLoader
-from jinja2.sandbox import SandboxedEnvironment
 from logging import error
 from logging import info
 from logging import warning
@@ -21,9 +18,7 @@ from wisdom.configuration import Component
 from wisdom.configuration import Configuration
 from wisdom.configuration import Version
 from wisdom.configuration import Culture
-from wisdom.jinja2_extensions import JINJA2_DISCOVER_EXTENSIONS
-from wisdom.jinja2_filters import JINJA2_DISCOVER_FILTERS
-
+from wisdom.ninja import DiscoverEnvironment
 
 class Template:
     def __init__(
@@ -533,19 +528,10 @@ class SourceDiscovery:
                                 jinja2_environment = jinja2_environments.get(design_name, None)
 
                                 if not jinja2_environment:
-                                    jinja2_loader = PrefixLoader({
-                                        'source': FileSystemLoader(self.arguments.source_path),
-                                        'design': FileSystemLoader(join(self.arguments.design_path, design_name, 'discover/templates')),
-                                    })
-                                    jinja2_environment = SandboxedEnvironment(
-                                        trim_blocks=True,
-                                        lstrip_blocks=True,
-                                        keep_trailing_newline=True,
-                                        extensions=JINJA2_DISCOVER_EXTENSIONS,
-                                        autoescape=True,
-                                        loader=jinja2_loader,
-                                        auto_reload=False)
-                                    jinja2_environment.filters.update(JINJA2_DISCOVER_FILTERS)
+                                    jinja2_environment = DiscoverEnvironment(
+                                        self.arguments.source_path,
+                                        join(self.arguments.design_path, design_name, 'discover/templates'),
+                                        self.arguments.output_path)
                                     jinja2_environments[design_name] = jinja2_environment
 
                                 jinja2_template = jinja2_environment.get_template(join('source', template.loader_path))

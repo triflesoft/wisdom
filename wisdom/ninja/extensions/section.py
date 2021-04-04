@@ -1,9 +1,8 @@
 from jinja2 import escape
-from jinja2 import TemplateSyntaxError
 from logging import error
 from unicodedata import normalize
 
-from .base import content_extension
+from .base import embed_extension
 
 
 TRANSLITERATE_MAP = {
@@ -29,9 +28,15 @@ def id_from_text(text):
     return ''.join(TRANSLITERATE_MAP.get(c, '_') for c in text)
 
 
-class SectionGenerateExtension(content_extension('SectionGenerateExtensionBase', 'section')):
-    def _process_markup(self, context, source_path, source_line, caller, h2=None, h3=None, h4=None, h5=None, h6=None):
-        content_text = str(caller())
+class SectionGenerateExtension(embed_extension('SectionGenerateExtensionBase', 'section')):
+    def _process_markup(self, context, source_path, source_line, caller, content_path=None, h2=None, h3=None, h4=None, h5=None, h6=None):
+        content_text = None
+
+        if content_path:
+            with open(content_path, 'r', newline='') as content_file:
+                content_text = content_file.read()
+        else:
+            content_text = str(caller())
 
         header_text = ''
         header_type = ''

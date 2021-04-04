@@ -8,18 +8,25 @@ from os.path import join
 from subprocess import run
 from urllib.parse import quote
 
-from .base import content_extension
+from .base import embed_extension
 
 
-class GraphvizDiscoverExtension(content_extension('GraphvizDiscoverExtensionBase', 'graphviz')):
-    def _process_markup(self, context, source_path, source_line, caller, description='Graphviz Diagram', format='svg', executable='dot'):
+class GraphvizDiscoverExtension(embed_extension('GraphvizDiscoverExtensionBase', 'graphviz')):
+    def _process_markup(self, context, source_path, source_line, caller, content_path=None, description='Graphviz Diagram', format='svg', executable='dot'):
         return ''
 
 
-class GraphvizGenerateExtension(content_extension('GraphvizGenerateExtensionBase', 'graphviz')):
-    def _process_markup(self, context, source_path, source_line, caller, description='Graphviz Diagram', format='svg', executable='dot'):
-        diagram_markup_text = str(caller())
-        diagram_markup_data = diagram_markup_text.encode('utf-8')
+class GraphvizGenerateExtension(embed_extension('GraphvizGenerateExtensionBase', 'graphviz')):
+    def _process_markup(self, context, source_path, source_line, caller, content_path=None, description='Graphviz Diagram', format='svg', executable='dot'):
+        content_text = None
+
+        if content_path:
+            with open(content_path, 'r', newline='') as content_file:
+                content_text = content_file.read()
+        else:
+            content_text = str(caller())
+
+        diagram_markup_data = content_text.encode('utf-8')
         diagram_hash = sha512()
         diagram_hash.update(diagram_markup_data)
         image_name = f'{diagram_hash.hexdigest()}.{format}'
@@ -51,7 +58,7 @@ class GraphvizGenerateExtension(content_extension('GraphvizGenerateExtensionBase
 
         return f'''
 <figure class="illustration-outer illustration-graphviz">
-    <button class="original-code-copy" data-original-code="{quote(diagram_markup_text)}">
+    <button class="original-code-copy" data-original-code="{quote(content_text)}">
         <img class="original-code-copy" src="static/images/icon-figure-code-copy.svg" alt="" />
     </button>
     <img class="illustration-inner" src="{image_link}" alt="{description}" />

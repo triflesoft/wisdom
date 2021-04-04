@@ -15,6 +15,7 @@ from datetime import datetime
 from datetime import time
 from datetime import timedelta
 from decimal import Decimal
+from io import StringIO
 from logging import error
 from os.path import abspath
 from os.path import dirname
@@ -24,7 +25,7 @@ from re import compile
 from re import UNICODE
 from unicodedata import digit
 
-from .base import include_extension
+from .base import embed_extension
 
 
 NATURAL_SORT_SPLIT_PATTERN = compile('\d+', UNICODE)
@@ -237,13 +238,7 @@ class TableCells:
             for sort_order, sort_cell in enumerate(sort_column):
                 self.tbody[sort_cell[1]][column_index].sort_order = sort_order
 
-    def load_csv(self, csv_path, dialect, linenumber_column):
-        csv_rows = []
-
-        with open(csv_path, 'r', newline='') as csv_file:
-            csv_reader = reader(csv_file, dialect=dialect)
-            csv_rows = [csv_row for csv_row in csv_reader]
-
+    def load_csv(self, csv_rows, linenumber_column):
         if len(csv_rows) > 0:
             head_row = csv_rows[0]
             data_rows = csv_rows[1:]
@@ -334,53 +329,46 @@ class TableCells:
         return ''.join(html_lines)
 
 
-class DataTableDiscoverExtension(include_extension('DataTableDiscoverExtensionBase', 'data_table')):
+class DataTableDiscoverExtension(embed_extension('DataTableDiscoverExtensionBase', 'data_table')):
     def _process_markup(
             self,
             context,
             source_path,
             source_line,
             caller,
-            absolute_path=None,
-            relative_path=None,
+            content_path=None,
             linenumber_column='|decimal|#',
             cvs_dialect='excel'):
 
         return ''
 
 
-class DataTableGenerateExtension(include_extension('DataTableGenerateExtensionBase', 'data_table')):
+class DataTableGenerateExtension(embed_extension('DataTableGenerateExtensionBase', 'data_table')):
     def _process_markup(
             self,
             context,
             source_path,
             source_line,
             caller,
-            absolute_path=None,
-            relative_path=None,
+            content_path=None,
             linenumber_column='|decimal|#',
             cvs_dialect='excel'):
         this = context['this']
         locale = Locale.parse(this.culture.code, sep='-')
         locale_code = '_'.join(part for part in (locale.language, locale.script, locale.territory) if part)
+        csv_rows = []
+
+        if content_path:
+            with open(content_path, 'r', newline='') as csv_file:
+                csv_reader = reader(csv_file, dialect=cvs_dialect)
+                csv_rows = [csv_row for csv_row in csv_reader]
+        else:
+            with StringIO(str(caller())) as csv_file:
+                csv_reader = reader(csv_file, dialect=cvs_dialect)
+                csv_rows = [csv_row for csv_row in csv_reader]
 
         table_cells = TableCells()
-
-        if absolute_path:
-            data_path = join(context['output_path'], absolute_path)
-        elif relative_path:
-            data_path = join(dirname(context['this'].source_path), relative_path)
-        else:
-            error(
-                'Document "%s:%d" contains invalid datatable. Either absolute_path, or relative_path must be specified.',
-                source_path,
-                source_line)
-
-            raise RuntimeError()
-
-        data_path = normpath(abspath(data_path))
-
-        table_cells.load_csv(data_path, cvs_dialect, linenumber_column)
+        table_cells.load_csv(csv_rows, linenumber_column)
         table_data = table_cells.to_data()
 
         return table_cells.to_html(locale_code, table_data)
