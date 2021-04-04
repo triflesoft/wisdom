@@ -109,9 +109,8 @@ body {
                         > div.admonition-inner {
                             padding: config.$main__inner_block_padding;
                             display: grid;
-                            grid-template-columns: auto 1rem auto;
+                            grid-template-columns: #{2*config.$main__admonition_icon_margin + config.$main__admonition_icon_width} 1rem 1fr;
                             grid-template-rows: auto;
-
 
                             > figure.admonition {
                                 grid-column-start: 1;
